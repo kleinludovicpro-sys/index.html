@@ -210,7 +210,62 @@
 
 <script>
   // Endpoint Apps Script fourni par toi
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUEd5XAQMwUuYegD1lvoyXaqimuysXqP3YVKeUe2HcqRUWYc5vO0g92xrMG8GPQNudiQ/exec";
+  const SPREADSHEET_ID = "1X_yFxK0EEFjNZu5Jnbg5CevjzyTH2qpK3LQKqg5bcVM";
+const SHEET_NAME = "Reponses";
+
+function doGet() {
+  return ContentService
+    .createTextOutput("OK - endpoint actif")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
+
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow([
+        "submittedAtISO",
+        "startedAtISO",
+        "durationSeconds",
+        "serviceOrigin",
+        "lastName",
+        "firstName",
+        "totalQuestions",
+        "answeredCount",
+        "correctCount",
+        "freeText",
+        "answersJSON"
+      ]);
+    }
+
+    sheet.appendRow([
+      data.submittedAtISO || "",
+      data.startedAtISO || "",
+      data.durationSeconds || "",
+      data.serviceOrigin || "",
+      data.lastName || "",
+      data.firstName || "",
+      data.totalQuestions || "",
+      data.answeredCount || "",
+      data.correctCount || "",
+      data.freeText || "",
+      JSON.stringify(data.answers || [])
+    ]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
   const SECONDS_PER_QUESTION = 30;
 
