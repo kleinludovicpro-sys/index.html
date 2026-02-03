@@ -3,48 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QCM Culture Incendie - SNCF</title>
+  <title>QCM Culture Incendie - Diagnostic</title>
   <style>
-    :root { --card-bg: rgba(255,255,255,0.92); --border: rgba(255,255,255,0.35); }
+    :root { --card-bg: rgba(255,255,255,0.94); --border: rgba(255,255,255,0.35); }
     * { box-sizing: border-box; }
+
     body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       margin: 0;
       min-height: 100vh;
       color: #111;
-      background: #111;
+      background: #0f1115;
     }
 
-    /* Fond : image locale (mets ton fichier à côté de index.html) */
+    /* Fond : tu peux remplacer par ton image (ex: background-regiolis.jpg) */
     .bg {
-      position: fixed;
-      inset: 0;
-      background-image: url("./background-regiolis.jpg"); /* <- Mets ici ta photo Regiolis */
+      position: fixed; inset: 0;
+      background-image: url("./background-regiolis.jpg");
       background-size: cover;
       background-position: center;
-      filter: blur(0px);
-      transform: scale(1.02);
       z-index: -3;
     }
-    /* Voile sombre pour lisibilité */
     .overlay {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.70), rgba(0,0,0,0.55));
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0.55));
       z-index: -2;
     }
 
     .container {
-      max-width: 920px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 24px 14px 40px;
+      padding: 22px 14px 40px;
     }
 
     h1, h2, h3 { margin: 0 0 10px; color: #fff; }
     p { margin: 8px 0; }
 
-    .muted { color: rgba(255,255,255,0.85); font-size: 0.98rem; line-height: 1.35; }
-    .danger { color: #ffb4b4; font-weight: 650; }
+    .muted { color: rgba(255,255,255,0.86); font-size: 0.98rem; line-height: 1.35; }
+    .danger { color: #ffb4b4; font-weight: 750; }
 
     .card {
       border: 1px solid var(--border);
@@ -63,7 +59,7 @@
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 999px;
       padding: 6px 10px;
-      font-weight: 650;
+      font-weight: 750;
     }
 
     button {
@@ -73,12 +69,12 @@
       background: #111;
       color: #fff;
       cursor: pointer;
-      font-weight: 650;
+      font-weight: 750;
     }
     button.secondary { background: #fff; color: #111; border: 1px solid rgba(0,0,0,0.25); }
     button:disabled { opacity: 0.55; cursor: not-allowed; }
 
-    label { font-weight: 650; }
+    label { font-weight: 750; }
     input[type="text"], select, textarea {
       width: 100%;
       padding: 10px;
@@ -96,21 +92,14 @@
       border-radius: 12px;
       margin: 8px 0;
       cursor: pointer;
-      background: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.92);
     }
     .options input { margin-right: 8px; }
 
     progress { width: 100%; height: 16px; border-radius: 999px; overflow: hidden; }
 
-    .footerNote {
-      color: rgba(255,255,255,0.80);
-      font-size: 0.92rem;
-      margin-top: 8px;
-    }
-
-    .topTitle {
-      padding: 10px 0 2px;
-    }
+    .small { font-size: 0.92rem; color: #222; }
+    .ok { color: #0a7a3f; font-weight: 750; }
   </style>
 </head>
 
@@ -119,22 +108,20 @@
   <div class="overlay"></div>
 
   <div class="container">
-    <div class="topTitle">
-      <h1>QCM Culture Incendie (diagnostic)</h1>
-      <p class="muted">
-        30 questions • <strong>30 secondes par question</strong> • objectif : état des lieux de connaissances (formation EPI supposée).
-      </p>
-      <p class="footerNote">
-        Données : service obligatoire. Nom/prénom facultatifs. Pas de mail, pas de matricule.
-      </p>
-    </div>
+    <h1>QCM Culture Incendie (diagnostic)</h1>
+    <p class="muted">
+      30 questions • <strong>30 secondes par question</strong> • objectif : état des lieux de connaissances (culture EPI attendue).
+    </p>
+    <p class="muted">
+      Service d’origine obligatoire • Nom/Prénom facultatifs • Pas de mail / pas de matricule
+    </p>
 
     <!-- INTRO -->
     <div id="startCard" class="card">
-      <p><strong>Consigne :</strong> réponds spontanément. Si le temps expire, on passe automatiquement à la question suivante.</p>
+      <p><strong>Consigne :</strong> réponds spontanément. Si le temps expire, la question est validée “sans réponse” et on passe à la suivante.</p>
 
-      <div class="card" style="background: rgba(255,255,255,0.86); box-shadow:none;">
-        <h3 style="margin-top:0;">Informations (minimales)</h3>
+      <div class="card" style="background: rgba(255,255,255,0.88); box-shadow:none;">
+        <h3 style="margin-top:0;">Informations minimales</h3>
 
         <label for="serviceOrigin"><strong>Service d’origine (obligatoire)</strong></label><br />
         <select id="serviceOrigin">
@@ -151,7 +138,7 @@
 
         <div id="otherServiceWrap" style="display:none; margin-top:10px;">
           <label for="serviceOther">Préciser “Autre” (obligatoire si Autre)</label>
-          <input id="serviceOther" type="text" placeholder="Ex : Logistique, Propreté, etc." />
+          <input id="serviceOther" type="text" placeholder="Ex : Propreté, Logistique, Prestataire, etc." />
         </div>
 
         <div class="row" style="margin-top:12px;">
@@ -165,16 +152,16 @@
           </div>
         </div>
 
-        <p style="margin:10px 0 0; color:#222;">
-          <strong>Anonymat :</strong> tes réponses sont exploitées statistiquement.
-          Nom/prénom ne servent qu’à un éventuel retour individuel, si tu choisis de les renseigner.
+        <p class="small" style="margin:10px 0 0;">
+          Le service est requis pour l’analyse statistique. Le nom/prénom ne servent que si tu veux un retour individuel.
         </p>
       </div>
 
       <button id="startBtn" style="margin-top:12px;">Démarrer</button>
       <p id="startWarn" class="danger" style="display:none; margin-top:10px;">
-        Merci de sélectionner ton service d’origine (et préciser “Autre” si besoin) avant de démarrer.
+        Merci de sélectionner ton service (et préciser “Autre” si besoin).
       </p>
+      <p id="startErr" class="danger" style="display:none; margin-top:10px;"></p>
     </div>
 
     <!-- QUIZ -->
@@ -198,320 +185,310 @@
 
     <!-- FINAL -->
     <div id="finalCard" class="card" style="display:none;">
-      <h2>Dernière étape : expression libre</h2>
-      <p style="color:#222; margin-top:6px;">
-        Tu peux signaler ce qui t’a manqué, ce qui t’a surpris, une difficulté, ou une situation vécue.
+      <h2>Expression libre (optionnel)</h2>
+      <p class="small">
+        Dis ce qui t’a manqué, ce qui t’a surpris, ou une difficulté (situations vécues, points flous, besoins de formation).
       </p>
       <textarea id="freeText" placeholder="Ton retour (optionnel)"></textarea>
 
       <div class="row" style="margin-top:12px;">
         <button id="sendBtn">Envoyer</button>
         <button id="restartBtn" class="secondary">Recommencer</button>
-        <span id="sendStatus" style="color:#222;"></span>
+        <span id="sendStatus" class="small"></span>
       </div>
+
       <p id="sendErr" class="danger" style="display:none; margin-top:10px;"></p>
     </div>
 
     <!-- DONE -->
     <div id="doneCard" class="card" style="display:none;">
       <h2>Merci 👍</h2>
-      <p style="color:#222;">Tes réponses ont été envoyées.</p>
+      <p class="small">Tes réponses ont été envoyées.</p>
+      <p class="small ok">Tu peux fermer cette page.</p>
     </div>
   </div>
 
 <script>
-/**
- * 1) Mets ici TON URL Apps Script (application web)
- * Exemple : https://script.google.com/macros/s/XXXX/exec
- */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUEd5XAQMwUuYegD1lvoyXaqimuysXqP3YVKeUe2HcqRUWYc5vO0g92xrMG8GPQNudiQ/exec";
+  // Endpoint Apps Script fourni par toi
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUEd5XAQMwUuYegD1lvoyXaqimuysXqP3YVKeUe2HcqRUWYc5vO0g92xrMG8GPQNudiQ/exec";
 
-/**
- * 2) Mets ici tes 30 questions.
- * - id unique
- * - text
- * - options
- * - correctIndex (si tu veux calculer un score; sinon mets null)
- *
- * NOTE : Ici je mets 3 exemples. Tu complètes jusqu’à 30.
- */
-const QUESTIONS = [
-  {
-    id: "Q1",
-    text: "Qu’est-ce qui définit un incendie (culture incendie) ?",
-    options: [
-      "Un feu visible produisant des flammes",
-      "Une combustion non maîtrisée dans le temps et l’espace",
-      "Toute émission de fumée dans un local",
-      "Une élévation anormale de température"
-    ],
-    correctIndex: 1
-  },
-  {
-    id: "Q2",
-    text: "Le tétraèdre du feu ajoute un élément au triangle classique. Lequel ?",
-    options: ["La pression", "Les radicaux libres", "L’électricité", "Le carburant"],
-    correctIndex: 1
-  },
-  {
-    id: "Q3",
-    text: "Pourquoi les fumées sont-elles souvent plus dangereuses que les flammes ?",
-    options: [
-      "Elles sont invisibles",
-      "Elles contiennent principalement du CO₂",
-      "Elles sont toxiques, chaudes et appauvrissent l’air en oxygène",
-      "Elles déclenchent les détecteurs"
-    ],
-    correctIndex: 2
-  },
-  // ... ajoute jusqu’à 30
-];
+  const SECONDS_PER_QUESTION = 30;
 
-const SECONDS_PER_QUESTION = 30;
+  // 30 questions (diagnostic culture incendie / SSI / levée de doute / accueil secours)
+  // Une seule bonne réponse "attendue" (index)
+  const QUESTIONS = [
+    { id:"Q1",  text:"Qu’est-ce qui définit un incendie (culture incendie) ?", options:["Un feu visible produisant des flammes","Une combustion non maîtrisée dans le temps et l’espace","Toute émission de fumée dans un local","Une élévation anormale de température"], correctIndex:1 },
+    { id:"Q2",  text:"Dans le tétraèdre du feu, l’élément ajouté au triangle classique est :", options:["La pression","Les radicaux libres","L’électricité","Le carburant"], correctIndex:1 },
+    { id:"Q3",  text:"Supprimer un seul des éléments du tétraèdre du feu entraîne :", options:["Un ralentissement du feu","L’extinction du feu","Une explosion possible","Une baisse de fumées uniquement"], correctIndex:1 },
+    { id:"Q4",  text:"La montée des fumées chaudes au plafond correspond au mode de propagation :", options:["Conduction","Rayonnement","Convection","Diffusion"], correctIndex:2 },
+    { id:"Q5",  text:"Pourquoi les fumées sont-elles souvent plus dangereuses que les flammes ?", options:["Parce qu’elles sont invisibles","Parce qu’elles sont surtout du CO₂","Parce qu’elles sont toxiques, chaudes et appauvrissent l’air en oxygène","Parce qu’elles déclenchent le SSI"], correctIndex:2 },
+    { id:"Q6",  text:"Le monoxyde de carbone (CO) est particulièrement dangereux car :", options:["Il est toujours visible","Il est incolore/inodore et mortel","Il explose à faible concentration","Il est sans effet si on est debout"], correctIndex:1 },
+    { id:"Q7",  text:"Un feu “maîtrisable” par un agent formé EPI est plutôt :", options:["Un feu généralisé au local","Un feu naissant, localisé, sans propagation","Un feu avec fumées épaisses","Un feu derrière une porte chaude"], correctIndex:1 },
+    { id:"Q8",  text:"Priorité absolue lors d’un départ de feu en gare :", options:["Éteindre le feu","Mettre en sécurité les personnes","Sauver le matériel","Limiter le retard trains"], correctIndex:1 },
+    { id:"Q9",  text:"Parmi ces méthodes, laquelle correspond à “étouffer” un feu ?", options:["Refroidir avec eau","Supprimer le combustible","Couper l’apport de comburant (oxygène)","Créer un courant d’air"], correctIndex:2 },
+    { id:"Q10", text:"La phase où le feu devient “auto-entretenu” est :", options:["Inflammation (dépend de la source)","Combustion entretenue (n’a plus besoin d’aide)","Refroidissement","Condensation"], correctIndex:1 },
 
-const $ = (id) => document.getElementById(id);
+    { id:"Q11", text:"En présence de fumées, la règle la plus sûre pour un agent non équipé ARI est :", options:["Rentrer vite pour identifier le foyer","S’approcher pour confirmer l’odeur","Ne pas s’exposer : se replier et alerter","Ouvrir les fenêtres pour ventiler"], correctIndex:2 },
+    { id:"Q12", text:"Ouvrir brutalement une porte d’un local en feu peut :", options:["Éteindre le feu par dépression","Créer un appel d’air et aggraver le feu","Couper l’alimentation électrique","Désactiver les détecteurs"], correctIndex:1 },
+    { id:"Q13", text:"La “levée de doute” sert d’abord à :", options:["Éteindre le feu","Confirmer/infirmer la réalité du sinistre","Réarmer le SSI","Évacuer systématiquement tout le bâtiment"], correctIndex:1 },
+    { id:"Q14", text:"Lors d’une levée de doute, le bon principe de décision est :", options:["Toujours entrer dans le local en alarme","Toujours utiliser un extincteur en prévention","Ne jamais s’exposer à un danger (fumées/chaleur/porte chaude)","Attendre les pompiers sans rien faire"], correctIndex:2 },
+    { id:"Q15", text:"Le réarmement / remise en état d’éléments SSI relève :", options:["Du CEV","De l’agent le plus ancien","Du mainteneur habilité","De n’importe quel agent formé EPI"], correctIndex:2 },
 
-$("qTotal").textContent = QUESTIONS.length;
+    { id:"Q16", text:"Si l’alarme SSI se déclenche et que tu confirmes un départ de feu non maîtrisable :", options:["Tu continues la levée de doute seul","Tu fais priorité à l’alerte + mise en sécurité + accueil secours","Tu réarmes pour arrêter la sonnerie","Tu prends l’ascenseur pour aller voir"], correctIndex:1 },
+    { id:"Q17", text:"Un critère d’alerte “immédiate” aux secours (18/112) est :", options:["Un simple doute sans signe","Une odeur légère sans fumée","Fumées visibles / départ feu confirmé / propagation possible","Un DM déclenché puis silence"], correctIndex:2 },
+    { id:"Q18", text:"Lors de l’appel aux secours, information la plus utile en plus du lieu :", options:["Ton avis sur la cause probable","L’étendue/propagation (ce qui brûle, fumées, victimes)","Le nom du chef de gare","Le nombre de trains en retard"], correctIndex:1 },
+    { id:"Q19", text:"Accueil des sapeurs-pompiers : le rôle du CEV est plutôt :", options:["Diriger les pompiers","Être l’interlocuteur site et transmettre infos/accès","Rester au bureau pour gérer l’exploitation","Intervenir avec extincteur sur ordre"], correctIndex:1 },
+    { id:"Q20", text:"En cas de suspicion de gaz (odeur, fuite), le bon réflexe est :", options:["Allumer/éteindre les lumières pour voir","Utiliser un téléphone dans la zone suspecte","Éloigner/mettre en sécurité et alerter, éviter sources d’ignition","Chercher la fuite avec une flamme"], correctIndex:2 },
 
-let idx = 0;
-let timer = null;
-let timeLeft = SECONDS_PER_QUESTION;
-let answers = []; // {id, selectedIndex|null, isCorrect|null, timedOut:boolean}
-let startedAtISO = null;
+    { id:"Q21", text:"Le risque électrique en intervention bâtiment voyageurs impose surtout :", options:["De toucher les armoires pour sentir la chaleur","De considérer que la coupure totale est toujours immédiate","De prévenir les secours et éviter tout contact/zone dangereuse","D’utiliser de l’eau sur tout feu électrique"], correctIndex:2 },
+    { id:"Q22", text:"Un extincteur à eau pulvérisée est généralement adapté à :", options:["Feux de solides (papier/bois) principalement","Feux de métaux","Feux de gaz","Tous les feux sans exception"], correctIndex:0 },
+    { id:"Q23", text:"Un extincteur CO₂ est surtout pertinent pour :", options:["Feux de classe A (braises)","Feux d’origine électrique / liquides inflammables en petit volume","Feux de gaz sous pression","Feux de métaux"], correctIndex:1 },
+    { id:"Q24", text:"Un extincteur poudre a comme intérêt majeur :", options:["Refroidir très efficacement","Couper la réaction en chaîne (effet chimique)","Faire retomber les fumées","Éviter la projection de braises"], correctIndex:1 },
+    { id:"Q25", text:"Quel comportement est le plus dangereux face à un feu dans un local fermé ?", options:["Se tenir à distance","Tester la porte (chaleur) avant ouverture","Ouvrir grand immédiatement pour “voir”","Alerter et se protéger"], correctIndex:2 },
 
-// Infos répondant
-let respondent = {
-  serviceOrigin: "",
-  serviceOther: "",
-  lastName: "",
-  firstName: ""
-};
+    { id:"Q26", text:"Le point de rassemblement sert principalement à :", options:["Faire une pause après l’évacuation","Compter/recenser et centraliser les informations","Se rapprocher du feu pour observer","Attendre les consignes sans communiquer"], correctIndex:1 },
+    { id:"Q27", text:"Guide/serre-file : leur utilité principale est :", options:["Éteindre le feu en premier","Organiser l’évacuation et vérifier que personne ne reste derrière","Remplacer les pompiers","Contrôler les billets"], correctIndex:1 },
+    { id:"Q28", text:"Si tu identifies une victime (malaise/CO/fumées) pendant l’événement, tu priorises :", options:["La recherche de la cause","La mise en sécurité + alerte secours + gestes adaptés sans t’exposer","Le retour à l’exploitation","La prise de photos pour REX"], correctIndex:1 },
+    { id:"Q29", text:"La fin de sinistre / reprise d’exploitation relève :", options:["De la décision du public","De la décision “orale” d’un sapeur-pompier sur place","D’une responsabilité hiérarchique/organisation SNCF (appui si besoin)","De l’agent qui a appelé les secours"], correctIndex:2 },
+    { id:"Q30", text:"Le but de ce QCM est avant tout :", options:["Sanctionner","Habiliter","Mesurer le niveau initial pour adapter la formation","Remplacer la formation pratique"], correctIndex:2 }
+  ];
 
-function show(elId) { $(elId).style.display = "block"; }
-function hide(elId) { $(elId).style.display = "none"; }
+  const $ = (id) => document.getElementById(id);
 
-function normalizeService() {
-  const service = $("serviceOrigin").value;
-  const other = ($("serviceOther").value || "").trim();
-  if (service === "Autre") return other ? `Autre - ${other}` : "Autre";
-  return service;
-}
+  // Safety: si JS ne charge pas, on le voit direct
+  try {
+    $("qTotal").textContent = String(QUESTIONS.length);
+  } catch (e) {}
 
-$("serviceOrigin").addEventListener("change", () => {
-  const v = $("serviceOrigin").value;
-  if (v === "Autre") show("otherServiceWrap");
-  else hide("otherServiceWrap");
-});
+  let idx = 0;
+  let timer = null;
+  let timeLeft = SECONDS_PER_QUESTION;
+  let answers = [];
+  let startedAtISO = null;
 
-function resetTimer() {
-  clearInterval(timer);
-  timeLeft = SECONDS_PER_QUESTION;
-  $("timeLeft").textContent = timeLeft;
-  $("progress").value = 0;
-  $("progress").max = SECONDS_PER_QUESTION;
-
-  timer = setInterval(() => {
-    timeLeft--;
-    $("timeLeft").textContent = timeLeft;
-    $("progress").value = SECONDS_PER_QUESTION - timeLeft;
-
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      // Auto-pass : on enregistre réponse vide si rien n’est coché
-      commitAnswer(true);
-      nextQuestion();
-    }
-  }, 1000);
-}
-
-function renderQuestion() {
-  const q = QUESTIONS[idx];
-  $("qIndex").textContent = idx + 1;
-  $("questionText").textContent = q.text;
-
-  const optionsDiv = $("options");
-  optionsDiv.innerHTML = "";
-
-  q.options.forEach((opt, i) => {
-    const label = document.createElement("label");
-    label.innerHTML = `<input type="radio" name="opt" value="${i}"> ${opt}`;
-    optionsDiv.appendChild(label);
-  });
-
-  $("nextBtn").disabled = true;
-  hide("warn");
-
-  optionsDiv.addEventListener("change", () => {
-    $("nextBtn").disabled = false;
-    hide("warn");
-  }, { once: true });
-
-  resetTimer();
-}
-
-function getSelectedIndex() {
-  const el = document.querySelector('input[name="opt"]:checked');
-  return el ? Number(el.value) : null;
-}
-
-function commitAnswer(timedOut = false) {
-  const q = QUESTIONS[idx];
-  const selected = getSelectedIndex();
-
-  let isCorrect = null;
-  if (q.correctIndex === null || q.correctIndex === undefined) {
-    isCorrect = null;
-  } else if (selected === null) {
-    isCorrect = null;
-  } else {
-    isCorrect = (selected === q.correctIndex);
-  }
-
-  answers.push({
-    id: q.id,
-    selectedIndex: selected,
-    isCorrect,
-    timedOut
-  });
-}
-
-function nextQuestion() {
-  idx++;
-  if (idx >= QUESTIONS.length) {
-    clearInterval(timer);
-    hide("quizCard");
-    show("finalCard");
-    return;
-  }
-  renderQuestion();
-}
-
-$("startBtn").addEventListener("click", () => {
-  const service = $("serviceOrigin").value;
-  const other = ($("serviceOther").value || "").trim();
-
-  if (!service) {
-    show("startWarn");
-    return;
-  }
-  if (service === "Autre" && !other) {
-    show("startWarn");
-    return;
-  }
-  hide("startWarn");
-
-  respondent.serviceOrigin = normalizeService();
-  respondent.lastName = ($("lastName").value || "").trim();
-  respondent.firstName = ($("firstName").value || "").trim();
-
-  startedAtISO = new Date().toISOString();
-
-  hide("startCard");
-  show("quizCard");
-  idx = 0;
-  answers = [];
-  renderQuestion();
-});
-
-$("nextBtn").addEventListener("click", () => {
-  clearInterval(timer);
-  const sel = getSelectedIndex();
-  if (sel === null) {
-    show("warn");
-    return;
-  }
-  commitAnswer(false);
-  nextQuestion();
-});
-
-$("skipBtn").addEventListener("click", () => {
-  clearInterval(timer);
-  commitAnswer(false);
-  nextQuestion();
-});
-
-$("restartBtn").addEventListener("click", () => {
-  // Reset soft
-  hide("finalCard");
-  show("startCard");
-  $("freeText").value = "";
-  $("sendStatus").textContent = "";
-  hide("sendErr");
-  $("sendBtn").disabled = false;
-});
-
-$("sendBtn").addEventListener("click", async () => {
-  hide("sendErr");
-  $("sendBtn").disabled = true;
-  $("sendStatus").textContent = "Envoi en cours…";
-
-  // Calculs
-  const answeredCount = answers.filter(a => a.selectedIndex !== null).length;
-  const correctCount = answers.filter(a => a.isCorrect === true).length;
-
-  const payload = {
-    submittedAtISO: new Date().toISOString(),
-    startedAtISO,
-    durationSeconds: startedAtISO ? Math.round((Date.now() - Date.parse(startedAtISO)) / 1000) : "",
-
-    serviceOrigin: respondent.serviceOrigin, // obligatoire (déjà validé)
-    lastName: respondent.lastName,           // facultatif
-    firstName: respondent.firstName,         // facultatif
-
-    totalQuestions: QUESTIONS.length,
-    answeredCount,
-    correctCount,
-
-    answers, // détails
-    freeText: ($("freeText").value || "").trim(),
-
-    // trace légère (pas d’identifiant technique)
-    clientInfo: {
-      userAgent: navigator.userAgent || ""
-    }
+  const respondent = {
+    serviceOrigin: "",
+    lastName: "",
+    firstName: ""
   };
 
-  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("COLLE_ICI")) {
-    $("sendStatus").textContent = "";
-    $("sendBtn").disabled = false;
-    $("sendErr").textContent = "APPS_SCRIPT_URL non configurée. Colle l’URL de ton Apps Script dans le code.";
-    show("sendErr");
-    return;
+  function show(id) { $(id).style.display = "block"; }
+  function hide(id) { $(id).style.display = "none"; }
+  function text(id, t) { $(id).textContent = t; }
+
+  $("serviceOrigin").addEventListener("change", () => {
+    const v = $("serviceOrigin").value;
+    if (v === "Autre") show("otherServiceWrap");
+    else hide("otherServiceWrap");
+  });
+
+  function normalizeService() {
+    const service = $("serviceOrigin").value;
+    const other = ($("serviceOther").value || "").trim();
+    if (service === "Autre") return other ? `Autre - ${other}` : "Autre";
+    return service;
   }
 
-  try {
-    const res = await fetch(APPS_SCRIPT_URL, {
-  method: "POST",
-  body: JSON.stringify(payload) // IMPORTANT : pas de headers
-});
+  function resetTimer() {
+    clearInterval(timer);
+    timeLeft = SECONDS_PER_QUESTION;
+    text("timeLeft", String(timeLeft));
+    $("progress").max = SECONDS_PER_QUESTION;
+    $("progress").value = 0;
 
+    timer = setInterval(() => {
+      timeLeft--;
+      text("timeLeft", String(timeLeft));
+      $("progress").value = SECONDS_PER_QUESTION - timeLeft;
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        commitAnswer(true);
+        nextQuestion();
+      }
+    }, 1000);
+  }
+
+  function renderQuestion() {
+    const q = QUESTIONS[idx];
+    text("qIndex", String(idx + 1));
+    text("questionText", q.text);
+
+    const optionsDiv = $("options");
+    optionsDiv.innerHTML = "";
+
+    q.options.forEach((opt, i) => {
+      const label = document.createElement("label");
+      label.innerHTML = `<input type="radio" name="opt" value="${i}"> ${opt}`;
+      optionsDiv.appendChild(label);
     });
 
-    const txt = await res.text();
-    // Certaines configs Apps Script renvoient du texte JSON
-    let ok = false;
-    try {
-      const j = JSON.parse(txt);
-      ok = !!j.ok;
-      if (!ok) throw new Error(j.error || "Erreur inconnue");
-    } catch (_) {
-      // si ce n'est pas du JSON, on considère OK si HTTP 200-299
-      ok = res.ok;
+    $("nextBtn").disabled = true;
+    hide("warn");
+
+    optionsDiv.addEventListener("change", () => {
+      $("nextBtn").disabled = false;
+      hide("warn");
+    }, { once: true });
+
+    resetTimer();
+  }
+
+  function getSelectedIndex() {
+    const el = document.querySelector('input[name="opt"]:checked');
+    return el ? Number(el.value) : null;
+  }
+
+  function commitAnswer(timedOut = false) {
+    const q = QUESTIONS[idx];
+    const selected = getSelectedIndex();
+    const isCorrect = (selected !== null) ? (selected === q.correctIndex) : null;
+
+    answers.push({
+      id: q.id,
+      selectedIndex: selected,
+      isCorrect,
+      timedOut
+    });
+  }
+
+  function nextQuestion() {
+    idx++;
+    if (idx >= QUESTIONS.length) {
+      clearInterval(timer);
+      hide("quizCard");
+      show("finalCard");
+      return;
+    }
+    renderQuestion();
+  }
+
+  function validateStart() {
+    hide("startErr");
+    hide("startWarn");
+
+    if (!QUESTIONS || QUESTIONS.length !== 30) {
+      text("startErr", "Erreur: la liste de questions n'est pas à 30. Vérifie le code QUESTIONS.");
+      show("startErr");
+      return false;
     }
 
-    if (!ok) throw new Error("Envoi refusé par le serveur.");
+    const service = $("serviceOrigin").value;
+    const other = ($("serviceOther").value || "").trim();
 
-    $("sendStatus").textContent = "Envoyé ✅";
-    hide("finalCard");
-    show("doneCard");
+    if (!service) { show("startWarn"); return false; }
+    if (service === "Autre" && !other) { show("startWarn"); return false; }
 
-  } catch (err) {
-    $("sendStatus").textContent = "";
-    $("sendBtn").disabled = false;
-    $("sendErr").textContent = "Échec de l’envoi : " + (err && err.message ? err.message : String(err));
-    show("sendErr");
+    return true;
   }
-});
+
+  $("startBtn").addEventListener("click", () => {
+    if (!validateStart()) return;
+
+    respondent.serviceOrigin = normalizeService();
+    respondent.lastName = ($("lastName").value || "").trim();
+    respondent.firstName = ($("firstName").value || "").trim();
+
+    startedAtISO = new Date().toISOString();
+
+    hide("startCard");
+    show("quizCard");
+
+    idx = 0;
+    answers = [];
+    renderQuestion();
+  });
+
+  $("nextBtn").addEventListener("click", () => {
+    clearInterval(timer);
+    const sel = getSelectedIndex();
+    if (sel === null) { show("warn"); return; }
+    commitAnswer(false);
+    nextQuestion();
+  });
+
+  $("skipBtn").addEventListener("click", () => {
+    clearInterval(timer);
+    commitAnswer(false);
+    nextQuestion();
+  });
+
+  $("restartBtn").addEventListener("click", () => {
+    hide("sendErr");
+    text("sendStatus", "");
+    $("sendBtn").disabled = false;
+    $("freeText").value = "";
+    hide("finalCard");
+    show("startCard");
+  });
+
+  async function sendPayload(payload) {
+    // 1) sendBeacon: très fiable sur mobile et GitHub Pages (pas de CORS preflight)
+    try {
+      const blob = new Blob([JSON.stringify(payload)], { type: "text/plain;charset=UTF-8" });
+      const ok = navigator.sendBeacon(APPS_SCRIPT_URL, blob);
+      if (ok) return { ok: true, via: "sendBeacon" };
+    } catch (_) {}
+
+    // 2) fallback fetch sans headers (évite preflight)
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    // Apps Script peut renvoyer JSON texte
+    const txt = await res.text();
+    try {
+      const j = JSON.parse(txt);
+      if (j && j.ok) return { ok: true, via: "fetch" };
+      return { ok: false, via: "fetch", error: (j && j.error) ? j.error : "Réponse serveur non OK" };
+    } catch (_) {
+      // Si non-JSON : on se base sur HTTP status
+      return res.ok ? { ok: true, via: "fetch" } : { ok: false, via: "fetch", error: "HTTP " + res.status };
+    }
+  }
+
+  $("sendBtn").addEventListener("click", async () => {
+    hide("sendErr");
+    $("sendBtn").disabled = true;
+    text("sendStatus", "Envoi en cours…");
+
+    const answeredCount = answers.filter(a => a.selectedIndex !== null).length;
+    const correctCount = answers.filter(a => a.isCorrect === true).length;
+
+    const payload = {
+      submittedAtISO: new Date().toISOString(),
+      startedAtISO,
+      durationSeconds: startedAtISO ? Math.round((Date.now() - Date.parse(startedAtISO)) / 1000) : "",
+
+      serviceOrigin: respondent.serviceOrigin,
+      lastName: respondent.lastName,
+      firstName: respondent.firstName,
+
+      totalQuestions: QUESTIONS.length,
+      answeredCount,
+      correctCount,
+
+      answers,
+      freeText: ($("freeText").value || "").trim(),
+
+      clientInfo: { userAgent: navigator.userAgent || "" }
+    };
+
+    try {
+      const result = await sendPayload(payload);
+      if (!result.ok) throw new Error(result.error || "Envoi refusé");
+
+      text("sendStatus", "Envoyé ✅ (" + result.via + ")");
+      hide("finalCard");
+      show("doneCard");
+    } catch (err) {
+      text("sendStatus", "");
+      $("sendBtn").disabled = false;
+      text("sendErr", "Échec de l’envoi : " + (err && err.message ? err.message : String(err)));
+      show("sendErr");
+    }
+  });
 </script>
 </body>
 </html>
