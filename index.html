@@ -16,7 +16,7 @@
       background: #0f1115;
     }
 
-    /* Fond : tu peux remplacer par ton image (ex: background-regiolis.jpg) */
+    /* Fond : mets une image "background-regiolis.jpg" à côté de index.html (optionnel) */
     .bg {
       position: fixed; inset: 0;
       background-image: url("./background-regiolis.jpg");
@@ -41,6 +41,7 @@
 
     .muted { color: rgba(255,255,255,0.86); font-size: 0.98rem; line-height: 1.35; }
     .danger { color: #ffb4b4; font-weight: 750; }
+    .ok { color: #0a7a3f; font-weight: 750; }
 
     .card {
       border: 1px solid var(--border);
@@ -99,7 +100,6 @@
     progress { width: 100%; height: 16px; border-radius: 999px; overflow: hidden; }
 
     .small { font-size: 0.92rem; color: #222; }
-    .ok { color: #0a7a3f; font-weight: 750; }
   </style>
 </head>
 
@@ -209,68 +209,12 @@
   </div>
 
 <script>
-  // Endpoint Apps Script fourni par toi
-  const SPREADSHEET_ID = "1X_yFxK0EEFjNZu5Jnbg5CevjzyTH2qpK3LQKqg5bcVM";
-const SHEET_NAME = "Reponses";
-
-function doGet() {
-  return ContentService
-    .createTextOutput("OK - endpoint actif")
-    .setMimeType(ContentService.MimeType.TEXT);
-}
-
-function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
-
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "submittedAtISO",
-        "startedAtISO",
-        "durationSeconds",
-        "serviceOrigin",
-        "lastName",
-        "firstName",
-        "totalQuestions",
-        "answeredCount",
-        "correctCount",
-        "freeText",
-        "answersJSON"
-      ]);
-    }
-
-    sheet.appendRow([
-      data.submittedAtISO || "",
-      data.startedAtISO || "",
-      data.durationSeconds || "",
-      data.serviceOrigin || "",
-      data.lastName || "",
-      data.firstName || "",
-      data.totalQuestions || "",
-      data.answeredCount || "",
-      data.correctCount || "",
-      data.freeText || "",
-      JSON.stringify(data.answers || [])
-    ]);
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ ok: true }))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
+  // TON URL /exec
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzpaU90UOO57xoSLGu6T7yrBhwb0hp9CNFO76oQ4uQ-13MCYLt3KdHbk45sYbIpIYgV2Q/exec";
 
   const SECONDS_PER_QUESTION = 30;
 
   // 30 questions (diagnostic culture incendie / SSI / levée de doute / accueil secours)
-  // Une seule bonne réponse "attendue" (index)
   const QUESTIONS = [
     { id:"Q1",  text:"Qu’est-ce qui définit un incendie (culture incendie) ?", options:["Un feu visible produisant des flammes","Une combustion non maîtrisée dans le temps et l’espace","Toute émission de fumée dans un local","Une élévation anormale de température"], correctIndex:1 },
     { id:"Q2",  text:"Dans le tétraèdre du feu, l’élément ajouté au triangle classique est :", options:["La pression","Les radicaux libres","L’électricité","Le carburant"], correctIndex:1 },
@@ -310,10 +254,7 @@ function doPost(e) {
 
   const $ = (id) => document.getElementById(id);
 
-  // Safety: si JS ne charge pas, on le voit direct
-  try {
-    $("qTotal").textContent = String(QUESTIONS.length);
-  } catch (e) {}
+  $("qTotal").textContent = String(QUESTIONS.length);
 
   let idx = 0;
   let timer = null;
@@ -321,11 +262,7 @@ function doPost(e) {
   let answers = [];
   let startedAtISO = null;
 
-  const respondent = {
-    serviceOrigin: "",
-    lastName: "",
-    firstName: ""
-  };
+  const respondent = { serviceOrigin:"", lastName:"", firstName:"" };
 
   function show(id) { $(id).style.display = "block"; }
   function hide(id) { $(id).style.display = "none"; }
@@ -355,7 +292,6 @@ function doPost(e) {
       timeLeft--;
       text("timeLeft", String(timeLeft));
       $("progress").value = SECONDS_PER_QUESTION - timeLeft;
-
       if (timeLeft <= 0) {
         clearInterval(timer);
         commitAnswer(true);
@@ -394,17 +330,11 @@ function doPost(e) {
     return el ? Number(el.value) : null;
   }
 
-  function commitAnswer(timedOut = false) {
+  function commitAnswer(timedOut=false) {
     const q = QUESTIONS[idx];
     const selected = getSelectedIndex();
     const isCorrect = (selected !== null) ? (selected === q.correctIndex) : null;
-
-    answers.push({
-      id: q.id,
-      selectedIndex: selected,
-      isCorrect,
-      timedOut
-    });
+    answers.push({ id:q.id, selectedIndex:selected, isCorrect, timedOut });
   }
 
   function nextQuestion() {
@@ -423,17 +353,15 @@ function doPost(e) {
     hide("startWarn");
 
     if (!QUESTIONS || QUESTIONS.length !== 30) {
-      text("startErr", "Erreur: la liste de questions n'est pas à 30. Vérifie le code QUESTIONS.");
+      text("startErr", "Erreur: la liste de questions n'est pas à 30.");
       show("startErr");
       return false;
     }
 
     const service = $("serviceOrigin").value;
     const other = ($("serviceOther").value || "").trim();
-
     if (!service) { show("startWarn"); return false; }
     if (service === "Autre" && !other) { show("startWarn"); return false; }
-
     return true;
   }
 
@@ -448,7 +376,6 @@ function doPost(e) {
 
     hide("startCard");
     show("quizCard");
-
     idx = 0;
     answers = [];
     renderQuestion();
@@ -478,28 +405,15 @@ function doPost(e) {
   });
 
   async function sendPayload(payload) {
-    // 1) sendBeacon: très fiable sur mobile et GitHub Pages (pas de CORS preflight)
-    try {
-      const blob = new Blob([JSON.stringify(payload)], { type: "text/plain;charset=UTF-8" });
-      const ok = navigator.sendBeacon(APPS_SCRIPT_URL, blob);
-      if (ok) return { ok: true, via: "sendBeacon" };
-    } catch (_) {}
-
-    // 2) fallback fetch sans headers (évite preflight)
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify(payload)
-    });
-
-    // Apps Script peut renvoyer JSON texte
+    const res = await fetch(APPS_SCRIPT_URL, { method:"POST", body: JSON.stringify(payload) });
     const txt = await res.text();
+
     try {
       const j = JSON.parse(txt);
-      if (j && j.ok) return { ok: true, via: "fetch" };
-      return { ok: false, via: "fetch", error: (j && j.error) ? j.error : "Réponse serveur non OK" };
+      if (j && j.ok) return { ok:true };
+      return { ok:false, error: (j && j.error) ? j.error : "Réponse serveur non OK" };
     } catch (_) {
-      // Si non-JSON : on se base sur HTTP status
-      return res.ok ? { ok: true, via: "fetch" } : { ok: false, via: "fetch", error: "HTTP " + res.status };
+      return res.ok ? { ok:true } : { ok:false, error:"HTTP " + res.status };
     }
   }
 
@@ -525,16 +439,14 @@ function doPost(e) {
       correctCount,
 
       answers,
-      freeText: ($("freeText").value || "").trim(),
-
-      clientInfo: { userAgent: navigator.userAgent || "" }
+      freeText: ($("freeText").value || "").trim()
     };
 
     try {
       const result = await sendPayload(payload);
       if (!result.ok) throw new Error(result.error || "Envoi refusé");
 
-      text("sendStatus", "Envoyé ✅ (" + result.via + ")");
+      text("sendStatus", "Envoyé ✅");
       hide("finalCard");
       show("doneCard");
     } catch (err) {
