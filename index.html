@@ -518,13 +518,16 @@
       await fetch(APPS_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
+        // On force le content-type pour aider Google Script à lire le blob
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
         body: JSON.stringify(payload)
       });
       return { ok: true, via: "fetch-no-cors" };
     } catch (err) {
-      return { ok: false, error: err && err.message ? err.message : String(err) };
+       // ...
     }
-  }
 
   $("sendBtn").addEventListener("click", async () => {
     hide("sendErr");
