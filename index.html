@@ -4,44 +4,105 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>QCM Culture Incendie - Diagnostic</title>
+
   <style>
-    :root { --card-bg: rgba(255,255,255,0.94); --border: rgba(255,255,255,0.35); }
+    :root { 
+      --card-bg: rgba(255,255,255,0.95); 
+      --accent: #111;
+      --border: rgba(0,0,0,0.1);
+    }
+
     * { box-sizing: border-box; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; min-height: 100vh; color: #111; background: #0f1115; }
-    .bg { position: fixed; inset: 0; background-image: url("regiolis.jpg"); background-size: cover; background-position: center; z-index: -3; pointer-events: none; }
-    .overlay { position: fixed; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0.55)); z-index: -2; pointer-events: none; }
-    .container { max-width: 980px; margin: 0 auto; padding: 22px 14px 40px; position: relative; z-index: 1; }
-    h1, h2, h3 { margin: 0 0 10px; color: #fff; }
-    p { margin: 8px 0; }
-    .muted { color: rgba(255,255,255,0.86); font-size: 0.98rem; line-height: 1.35; }
-    .danger { color: #ffb4b4; font-weight: 750; }
-    .ok { color: #0a7a3f; font-weight: 750; }
-    .card { border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin: 14px 0; background: var(--card-bg); backdrop-filter: blur(6px); box-shadow: 0 12px 30px rgba(0,0,0,0.25); }
-    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .pill { background: rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.08); border-radius: 999px; padding: 6px 10px; font-weight: 750; }
-    button { padding: 11px 14px; border-radius: 12px; border: 1px solid #111; background: #111; color: #fff; cursor: pointer; font-weight: 750; }
-    button.secondary { background: #fff; color: #111; border: 1px solid rgba(0,0,0,0.25); }
-    button:disabled { opacity: 0.55; cursor: not-allowed; }
-    label { font-weight: 750; }
-    input[type="text"], select, textarea { width: 100%; padding: 10px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.20); font-size: 1rem; background: #fff; }
-    textarea { min-height: 120px; resize: vertical; }
-    .options label { display: block; padding: 10px 10px; border: 1px solid rgba(0,0,0,0.14); border-radius: 12px; margin: 8px 0; cursor: pointer; background: rgba(255,255,255,0.92); }
-    .options input { margin-right: 8px; }
-    progress { width: 100%; height: 16px; border-radius: 999px; overflow: hidden; }
-    #quizCard { background: rgba(255,255,255,0.96) !important; }
-    #questionText { color: #111 !important; font-size: 1.3rem; font-weight: 800; line-height: 1.35; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: #111;
+      background: #0f1115;
+    }
+
+    /* Fond d'écran */
+    .bg {
+      position: fixed; inset: 0;
+      background-image: url("regiolis.jpg");
+      background-size: cover;
+      background-position: center;
+      z-index: -3;
+      pointer-events: none;
+    }
+
+    .overlay {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px 15px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 { color: #fff; font-size: 1.6rem; text-align: center; margin-bottom: 5px; }
+    .muted { color: rgba(255,255,255,0.9); text-align: center; font-size: 0.9rem; margin-bottom: 20px; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    /* Formulaire */
+    label { font-weight: 700; display: block; margin-bottom: 5px; margin-top: 10px; }
+    input[type="text"], select, textarea {
+      width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border);
+      font-size: 1rem; margin-bottom: 10px;
+    }
+
+    /* Boutons */
+    button {
+      width: 100%; padding: 14px; border-radius: 10px; border: none;
+      background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem;
+      cursor: pointer; margin-top: 10px;
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    button.secondary { background: #fff; color: #111; border: 1px solid #ccc; }
+
+    /* Quiz */
+    .pill { background: #eee; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+    progress { width: 100%; height: 10px; margin: 15px 0; border-radius: 5px; }
+    
+    #questionText { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 15px 0; }
+
+    .options label {
+      display: flex; align-items: center; padding: 12px;
+      border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .options label:hover { background: #f9f9f9; }
+    .options input { transform: scale(1.3); margin-right: 12px; }
+
+    .danger { color: #d32f2f; font-weight: 700; text-align: center; display: block; margin-top: 10px; }
+    .ok { color: #2e7d32; font-weight: 700; text-align: center; }
   </style>
 </head>
+
 <body>
   <div class="bg"></div>
   <div class="overlay"></div>
+
   <div class="container">
-    <h1>QCM Culture Incendie (diagnostic)</h1>
-    <p class="muted">30 questions • 30s / question • Culture EPI attendue.</p>
-    
+    <h1>QCM Culture Incendie</h1>
+    <p class="muted">30 questions • 30 secondes par question</p>
+
     <div id="startCard" class="card">
-      <h3 style="color:#111">Informations minimales</h3>
-      <label for="serviceOrigin">Service d’origine (obligatoire)</label>
+      <label>Service d’origine (obligatoire)</label>
       <select id="serviceOrigin">
         <option value="">— Sélectionner —</option>
         <option value="Escale">Escale</option>
@@ -53,51 +114,55 @@
         <option value="Gares & Connexions">Gares & Connexions</option>
         <option value="Autre">Autre</option>
       </select>
-      <div id="otherServiceWrap" style="display:none; margin-top:10px;">
-        <input id="serviceOther" type="text" placeholder="Précisez votre service" />
+
+      <div id="otherServiceWrap" style="display:none;">
+        <label>Précisez votre service</label>
+        <input id="serviceOther" type="text" placeholder="Ex: Propreté, Logistique..." />
       </div>
-      <div class="row" style="margin-top:12px;">
-        <input id="lastName" type="text" placeholder="Nom (facultatif)" style="flex:1" />
-        <input id="firstName" type="text" placeholder="Prénom (facultatif)" style="flex:1" />
-      </div>
-      <button id="startBtn" style="margin-top:15px;" disabled>Démarrer</button>
-      <p id="startWarn" class="danger" style="display:none;">Merci de sélectionner ton service.</p>
+
+      <label>Nom (facultatif)</label>
+      <input id="lastName" type="text" placeholder="Votre nom" />
+      
+      <label>Prénom (facultatif)</label>
+      <input id="firstName" type="text" placeholder="Votre prénom" />
+
+      <button id="startBtn">Démarrer le QCM</button>
+      <span id="startWarn" class="danger" style="display:none;">Merci de sélectionner votre service.</span>
     </div>
 
     <div id="quizCard" class="card" style="display:none;">
-      <div class="row">
-        <div class="pill">Q <span id="qIndex">1</span>/<span id="qTotal">30</span></div>
-        <div class="pill">Temps : <span id="timeLeft">30</span>s</div>
+      <div style="display:flex; justify-content: space-between;">
+        <span class="pill">Question <span id="qIndex">1</span>/30</span>
+        <span class="pill">Chrono: <span id="timeLeft">30</span>s</span>
       </div>
       <progress id="progress" value="0" max="30"></progress>
-      <h2 id="questionText"></h2>
+      
+      <div id="questionText">Chargement...</div>
       <div id="options" class="options"></div>
-      <div class="row">
-        <button id="nextBtn" disabled>Valider & suivant</button>
-        <button id="skipBtn" class="secondary">Passer</button>
-      </div>
+
+      <button id="nextBtn" disabled>Valider & Suivant</button>
+      <button id="skipBtn" class="secondary">Passer la question</button>
     </div>
 
     <div id="finalCard" class="card" style="display:none;">
-      <h2>Expression libre (optionnel)</h2>
-      <textarea id="freeText" placeholder="Tes retours..."></textarea>
-      <div class="row" style="margin-top:12px;">
-        <button id="sendBtn">Envoyer</button>
-        <span id="sendStatus"></span>
-      </div>
-      <p id="sendErr" class="danger" style="display:none;"></p>
+      <h2 style="margin-top:0;">Terminé !</h2>
+      <label>Un retour à nous faire ? (optionnel)</label>
+      <textarea id="freeText" placeholder="Difficultés, points flous..."></textarea>
+      <button id="sendBtn">Envoyer mes réponses</button>
+      <p id="sendStatus" style="text-align:center; font-weight:700;"></p>
     </div>
 
     <div id="doneCard" class="card" style="display:none;">
-      <h2 style="color:#111">Merci 👍</h2>
-      <p class="ok">Tes réponses ont été envoyées. Tu peux fermer cette page.</p>
+      <h2 class="ok">Merci !</h2>
+      <p style="text-align:center;">Tes réponses ont été transmises avec succès.</p>
+      <p style="text-align:center; font-size:0.9rem;">Tu peux maintenant fermer cette fenêtre.</p>
     </div>
   </div>
 
 <script>
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0kqt1t0nhy3DVU6iJ4vQT4vDLfv_Gz7Jdoha3Ydx-FZdK8KAhdmQa73A3_VTMPt6xKA/exec";
-  const SECONDS_PER_QUESTION = 30;
-
+  
+  // Questions (Contenu vérifié)
   const QUESTIONS = [
     { id:"Q1", text:"Qu’est-ce qui définit un incendie ?", options:["Un feu visible","Une combustion non maîtrisée","Toute émission de fumée","Hausse de température"], correctIndex:1 },
     { id:"Q2", text:"Élément ajouté au triangle du feu pour le tétraèdre :", options:["Pression","Radicaux libres","Électricité","Carburant"], correctIndex:1 },
@@ -107,7 +172,7 @@
     { id:"Q6", text:"Le CO est dangereux car :", options:["Visible","Incolore/inodore et mortel","Explose vite","Sans effet debout"], correctIndex:1 },
     { id:"Q7", text:"Un feu maîtrisable EPI est :", options:["Généralisé","Naissant, sans propagation","Épais","Derrière porte chaude"], correctIndex:1 },
     { id:"Q8", text:"Priorité absolue en gare :", options:["Éteindre","Sécurité des personnes","Sauver matériel","Limiter retards"], correctIndex:1 },
-    { id:"Q9", text:"Étousser un feu c'est :", options:["Refroidir","Supprimer combustible","Couper l'oxygène","Courant d'air"], correctIndex:2 },
+    { id:"Q9", text:"Étouffer un feu c'est :", options:["Refroidir","Supprimer combustible","Couper l'oxygène","Courant d'air"], correctIndex:2 },
     { id:"Q10", text:"Phase auto-entretenue :", options:["Inflammation","Combustion entretenue","Refroidissement","Condensation"], correctIndex:1 },
     { id:"Q11", text:"Règle face aux fumées (non équipé) :", options:["Identifier foyer","Approcher","Ne pas s'exposer, alerter","Ventiler"], correctIndex:2 },
     { id:"Q12", text:"Ouvrir brutalement une porte en feu :", options:["Éteint le feu","Appel d'air / aggravation","Coupe électricité","Désactive détecteurs"], correctIndex:1 },
@@ -132,102 +197,117 @@
   ];
 
   const $ = (id) => document.getElementById(id);
-  $("qTotal").textContent = QUESTIONS.length;
-
-  let idx = 0, timer = null, timeLeft = SECONDS_PER_QUESTION, answers = [], startedAtISO = null;
+  let idx = 0, timer = null, timeLeft = 30, answers = [], startedAtISO = null;
   const resp = { service:"", last:"", first:"" };
 
-  function show(id) { $(id).style.display = "block"; }
-  function hide(id) { $(id).style.display = "none"; }
-  function text(id, t) { $(id).textContent = t; }
-
-  function refreshStart() {
-    const s = $("serviceOrigin").value;
-    const o = ($("serviceOther").value || "").trim();
-    $("startBtn").disabled = !s || (s === "Autre" && !o);
-  }
-
-  $("serviceOrigin").onchange = () => {
-    $("otherServiceWrap").style.display = ($("serviceOrigin").value === "Autre") ? "block" : "none";
-    refreshStart();
-  };
-  $("serviceOther").oninput = refreshStart;
-
-  function resetTimer() {
-    clearInterval(timer);
-    timeLeft = SECONDS_PER_QUESTION;
-    text("timeLeft", timeLeft);
-    $("progress").value = 0;
-    timer = setInterval(() => {
-      timeLeft--;
-      text("timeLeft", timeLeft);
-      $("progress").value = SECONDS_PER_QUESTION - timeLeft;
-      if (timeLeft <= 0) { commit(true); next(); }
-    }, 1000);
-  }
-
-  function render() {
+  // --- LOGIQUE DU QUIZ ---
+  function renderQuestion() {
     const q = QUESTIONS[idx];
-    text("qIndex", idx + 1);
-    text("questionText", q.text);
-    $("options").innerHTML = "";
-    q.options.forEach((o, i) => {
-      const l = document.createElement("label");
-      l.innerHTML = `<input type="radio" name="opt" value="${i}"> ${o}`;
-      $("options").appendChild(l);
+    $("qIndex").textContent = idx + 1;
+    $("questionText").textContent = q.text;
+    
+    const container = $("options");
+    container.innerHTML = "";
+    
+    q.options.forEach((opt, i) => {
+      const label = document.createElement("label");
+      label.innerHTML = `<input type="radio" name="quizOpt" value="${i}"> ${opt}`;
+      container.appendChild(label);
     });
+
     $("nextBtn").disabled = true;
-    $("options").onclick = () => $("nextBtn").disabled = false;
+    container.onchange = () => { $("nextBtn").disabled = false; };
     resetTimer();
   }
 
-  function commit(t=false) {
+  function resetTimer() {
+    clearInterval(timer);
+    timeLeft = 30;
+    $("timeLeft").textContent = timeLeft;
+    $("progress").value = 0;
+    timer = setInterval(() => {
+      timeLeft--;
+      $("timeLeft").textContent = timeLeft;
+      $("progress").value = 30 - timeLeft;
+      if (timeLeft <= 0) { commitAnswer(true); nextQuestion(); }
+    }, 1000);
+  }
+
+  function commitAnswer(isTimeout = false) {
     const q = QUESTIONS[idx];
-    const sel = document.querySelector('input[name="opt"]:checked');
-    const val = sel ? parseInt(sel.value) : null;
-    answers.push({ id:q.id, selected:val, isCorrect: val === q.correctIndex, timedOut:t });
+    const radios = document.getElementsByName("quizOpt");
+    let selected = null;
+    for (let r of radios) { if (r.checked) selected = parseInt(r.value); }
+
+    answers.push({
+      id: q.id,
+      selected: selected,
+      isCorrect: selected === q.correctIndex,
+      timedOut: isTimeout
+    });
   }
 
-  function next() {
+  function nextQuestion() {
     idx++;
-    if (idx >= QUESTIONS.length) { clearInterval(timer); hide("quizCard"); show("finalCard"); }
-    else render();
+    if (idx >= QUESTIONS.length) {
+      clearInterval(timer);
+      $("quizCard").style.display = "none";
+      $("finalCard").style.display = "block";
+    } else {
+      renderQuestion();
+    }
   }
 
-  $("startBtn").onclick = () => {
-    resp.service = ($("serviceOrigin").value === "Autre") ? $("serviceOther").value : $("serviceOrigin").value;
-    resp.last = $("lastName").value;
-    resp.first = $("firstName").value;
-    startedAtISO = new Date().toISOString();
-    hide("startCard"); show("quizCard"); render();
+  // --- ACTIONS BOUTONS ---
+  $("serviceOrigin").onchange = () => {
+    $("otherServiceWrap").style.display = ($("serviceOrigin").value === "Autre") ? "block" : "none";
   };
 
-  $("nextBtn").onclick = () => { commit(); next(); };
-  $("skipBtn").onclick = () => { commit(); next(); };
+  $("startBtn").onclick = () => {
+    const s = $("serviceOrigin").value;
+    if (!s) { $("startWarn").style.display = "block"; return; }
+    
+    resp.service = (s === "Autre") ? $("serviceOther").value : s;
+    resp.last = $("lastName").value;
+    resp.first = $("firstName").value;
+    
+    startedAtISO = new Date().toISOString();
+    $("startCard").style.display = "none";
+    $("quizCard").style.display = "block";
+    renderQuestion();
+  };
+
+  $("nextBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
+  $("skipBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
 
   $("sendBtn").onclick = async () => {
     $("sendBtn").disabled = true;
-    text("sendStatus", "Envoi...");
+    $("sendStatus").textContent = "Envoi en cours vers Google Sheets...";
+
     const payload = {
       submittedAtISO: new Date().toISOString(),
-      startedAtISO,
-      durationSeconds: Math.round((Date.now() - Date.parse(startedAtISO))/1000),
+      startedAtISO: startedAtISO,
       serviceOrigin: resp.service,
       lastName: resp.last,
       firstName: resp.first,
-      totalQuestions: QUESTIONS.length,
-      answeredCount: answers.filter(a => a.selected !== null).length,
       correctCount: answers.filter(a => a.isCorrect).length,
-      answers,
+      answers: answers,
       freeText: $("freeText").value
     };
 
     try {
-      await fetch(APPS_SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
-      hide("finalCard"); show("doneCard");
+      await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(payload)
+      });
+      // On considère que ça a marché si fetch ne crash pas
+      $("finalCard").style.display = "none";
+      $("doneCard").style.display = "block";
     } catch (e) {
       $("sendBtn").disabled = false;
-      text("sendErr", "Erreur: " + e); show("sendErr");
+      $("sendStatus").textContent = "Erreur réseau. Réessayez en 4G/5G.";
+      console.error(e);
     }
   };
 </script>
