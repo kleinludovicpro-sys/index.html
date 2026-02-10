@@ -221,8 +221,9 @@
     $("startWarn").style.display = "none";
 
     resp.service = (s === "Autre") ? other : s;
-    resp.last = last;
-    resp.first = first;
+    resp.last  = $("lastName").value.trim();
+    resp.first = $("firstName").value.trim();
+
 
     $("startCard").style.display = "none";
     $("quizCard").style.display = "block";
@@ -234,26 +235,45 @@
 
   // 🔥 Envoi compatible poste SNCF : pas d'attente réseau
   $("sendBtn").onclick = () => {
-    $("sendBtn").disabled = true;
-    $("sendStatus").textContent = "Envoi des résultats…";
+  $("sendBtn").disabled = true;
+  $("sendStatus").textContent = "Envoi des résultats…";
 
-   const payload = {
-  submittedAtISO: new Date().toISOString(),
-  startedAtISO: "",                 // optionnel (si tu ne l’as pas)
-  durationSeconds: "",              // optionnel (si tu ne l’as pas)
+  // ⚠️ sécurité : si jamais réponses vides
+  const totalQuestions = QUESTIONS.length;
+  const answeredCount = answers.filter(a => a && a.selected !== null && a.selected !== undefined).length;
+  const correctCount  = answers.filter(a => a && a.isCorrect === true).length;
 
-  serviceOrigin: resp.service,      // ✅ attendu par Apps Script
-  lastName: resp.last,              // ✅ attendu
-  firstName: resp.first,            // ✅ attendu
+  const payload = {
+    submittedAtISO: new Date().toISOString(),
+    startedAtISO: "",                  // optionnel
+    durationSeconds: "",               // optionnel
 
-  totalQuestions: QUESTIONS.length, // ✅ attendu
-  answeredCount: answers.filter(a => a.selected !== null).length, // ✅ attendu
-  correctCount: answers.filter(a => a.isCorrect).length,          // ✅ attendu
+    serviceOrigin: resp.service || "",
+    lastName: resp.last || "",
+    firstName: resp.first || "",
 
-  freeText: $("freeText").value,    // ✅ attendu
+    totalQuestions,
+    answeredCount,
+    correctCount,
 
-  answers: answers,                 // ✅ attendu (et non "details")
+    freeText: $("freeText").value || "",
+
+    // ✅ IMPORTANT : ton Apps Script attend "answers"
+    answers: answers
+  };
+
+  try {
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(payload)
+    });
+  } catch (e) {}
+
+  $("finalCard").style.display = "none";
+  $("doneCard").style.display = "block";
 };
+
 
 
     try {
