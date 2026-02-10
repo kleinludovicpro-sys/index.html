@@ -237,15 +237,24 @@
     $("sendBtn").disabled = true;
     $("sendStatus").textContent = "Envoi des résultats…";
 
-    const payload = {
-      submittedAtISO: new Date().toISOString(),
-      service: resp.service,
-      nom: resp.last + " " + resp.first,
-      score: answers.filter(a => a.isCorrect).length + "/30",
-      details: JSON.stringify(answers),
-      freeText: $("freeText").value,
-      userAgent: navigator.userAgent
-    };
+   const payload = {
+  submittedAtISO: new Date().toISOString(),
+  startedAtISO: "",                 // optionnel (si tu ne l’as pas)
+  durationSeconds: "",              // optionnel (si tu ne l’as pas)
+
+  serviceOrigin: resp.service,      // ✅ attendu par Apps Script
+  lastName: resp.last,              // ✅ attendu
+  firstName: resp.first,            // ✅ attendu
+
+  totalQuestions: QUESTIONS.length, // ✅ attendu
+  answeredCount: answers.filter(a => a.selected !== null).length, // ✅ attendu
+  correctCount: answers.filter(a => a.isCorrect).length,          // ✅ attendu
+
+  freeText: $("freeText").value,    // ✅ attendu
+
+  answers: answers,                 // ✅ attendu (et non "details")
+};
+
 
     try {
       fetch(APPS_SCRIPT_URL, {
