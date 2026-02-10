@@ -1,215 +1,157 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QCM Culture Incendie - Diagnostic</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QCM Culture Incendie</title>
 
-  <style>
-    :root { 
-      --card-bg: rgba(255,255,255,0.96); 
-      --accent: #111;
-      --sncf-blue: #0088ce;
-      --border: rgba(0,0,0,0.1);
-    }
-    * { box-sizing: border-box; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      margin: 0; min-height: 100vh; color: #111; background: #0f1115;
-    }
-    .bg {
-      position: fixed; inset: 0;
-      background-image: url("regiolis.jpg");
-      background-size: cover; background-position: center;
-      z-index: -3; pointer-events: none;
-    }
-    .overlay {
-      position: fixed; inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
-      z-index: -2; pointer-events: none;
-    }
-    .container { max-width: 800px; margin: 0 auto; padding: 20px 15px; position: relative; z-index: 1; }
-    h1 { color: #fff; font-size: 1.6rem; text-align: center; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    .muted { color: rgba(255,255,255,0.9); text-align: center; font-size: 0.9rem; margin-bottom: 20px; }
-    .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-    label { font-weight: 700; display: block; margin-bottom: 5px; margin-top: 10px; }
-    input[type="text"], select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 1rem; margin-bottom: 10px; }
-    button { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 10px; }
-    button:disabled { opacity: 0.4; cursor: not-allowed; }
-    button.secondary { background: #fff; color: #111; border: 1px solid #ccc; }
-    .pill { background: #eee; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
-    progress { width: 100%; height: 10px; margin: 15px 0; border-radius: 5px; }
-    #questionText { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 15px 0; }
-    .options label { display: flex; align-items: center; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
-    .options label:hover { background: #f9f9f9; }
-    .options input { transform: scale(1.3); margin-right: 12px; }
-    .danger { color: #d32f2f; font-weight: 700; }
-    .ok { color: #2e7d32; font-weight: 700; text-align: center; }
-  </style>
+<style>
+body { font-family: Arial, sans-serif; background:#111; color:#111; margin:0 }
+.bg { position:fixed; inset:0; background:url("regiolis.jpg") center/cover; z-index:-2 }
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:-1 }
+.container { max-width:800px; margin:auto; padding:20px }
+.card { background:#fff; border-radius:12px; padding:20px; margin-bottom:15px }
+button { padding:12px; width:100%; font-weight:bold }
+.hidden { display:none }
+</style>
 </head>
 
 <body>
-  <div class="bg"></div>
-  <div class="overlay"></div>
+<div class="bg"></div>
+<div class="overlay"></div>
 
-  <div class="container">
-    <h1>QCM Culture Incendie</h1>
-    <p class="muted">30 questions • 15 secondes par question</p>
+<div class="container">
 
-    <div id="startCard" class="card">
-      <label>Service d’origine (obligatoire)</label>
-      <select id="serviceOrigin">
-        <option value="">— Sélectionner —</option>
-        <option value="Escale">Escale</option>
-        <option value="Vente / Accueil">Vente / Accueil</option>
-        <option value="ASCT">ASCT</option>
-        <option value="Conducteur">Conducteur</option>
-        <option value="Sûreté">Sûreté</option>
-        <option value="Maintenance / Technique">Maintenance / Technique</option>
-        <option value="Gares & Connexions">Gares & Connexions</option>
-        <option value="Autre">Autre</option>
-      </select>
-      <div id="otherServiceWrap" style="display:none;">
-        <input id="serviceOther" type="text" placeholder="Précisez votre service" />
-      </div>
+<h1 style="color:white;text-align:center">QCM Culture Incendie</h1>
 
-      <label>Nom / Prénom (facultatif)</label>
-      <input id="lastName" type="text" placeholder="Nom" />
-      <input id="firstName" type="text" placeholder="Prénom" />
+<div id="startCard" class="card">
+  <label>Service (obligatoire)</label>
+  <select id="serviceOrigin">
+    <option value="">— choisir —</option>
+    <option>Escale</option>
+    <option>ASCT</option>
+    <option>Maintenance</option>
+  </select>
 
-      <button id="startBtn">Démarrer le diagnostic (15s)</button>
-      <p id="startWarn" class="danger" style="display:none; text-align:center;">
-        Veuillez sélectionner votre service.
-      </p>
-    </div>
+  <label>Nom</label>
+  <input id="lastName" type="text">
 
-    <div id="quizCard" class="card" style="display:none;">
-      <div style="display:flex; justify-content: space-between;">
-        <span class="pill">Q <span id="qIndex">1</span>/30</span>
-        <span class="pill">Chrono: <span id="timeLeft">15</span>s</span>
-      </div>
-      <progress id="progress" value="0" max="15"></progress>
-      <div id="questionText">...</div>
-      <div id="options" class="options"></div>
-      <button id="nextBtn" disabled>Valider & Suivant</button>
-      <button id="skipBtn" class="secondary">Passer</button>
-    </div>
+  <label>Prénom</label>
+  <input id="firstName" type="text">
 
-    <div id="finalCard" class="card" style="display:none;">
-      <h2>Diagnostic terminé</h2>
-      <label>Un retour à nous faire ? (optionnel)</label>
-      <textarea id="freeText"></textarea>
-      <button id="sendBtn">Envoyer mes résultats</button>
-      <p id="sendStatus" style="text-align:center; font-weight:bold;"></p>
-    </div>
+  <button id="startBtn">Démarrer le diagnostic</button>
+  <p id="warn" style="color:red;display:none">Tous les champs sont obligatoires</p>
+</div>
 
-    <div id="doneCard" class="card" style="display:none;">
-      <h2 class="ok">Résultats envoyés</h2>
-      <p style="text-align:center;">Merci pour votre participation.</p>
-    </div>
-  </div>
+<div id="quizCard" class="card hidden">
+  <h2 id="questionText"></h2>
+  <div id="options"></div>
+  <button id="nextBtn" disabled>Suivant</button>
+</div>
+
+<div id="finalCard" class="card hidden">
+  <h2>Terminé</h2>
+  <textarea id="freeText" placeholder="Commentaire (optionnel)"></textarea>
+  <button id="sendBtn">Envoyer</button>
+</div>
+
+<div id="doneCard" class="card hidden">
+  <h2>✅ Résultats envoyés</h2>
+</div>
+
+</div>
 
 <script>
-const APPS_SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbx0kqt1t0nhy3DVU6iJ4vQT4vDLfv_Gz7Jdoha3Ydx-FZdK8KAhdmQa73A3_VTMPt6xKA/exec";
+// 🔗 URL GOOGLE SCRIPT
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0kqt1t0nhy3DVU6iJ4vQT4vDLfv_Gz7Jdoha3Ydx-FZdK8KAhdmQa73A3_VTMPt6xKA/exec";
 
-const TIME_LIMIT = 15;
+// ✅ QUESTIONS VALIDES (EXEMPLE)
+const QUESTIONS = [
+  {
+    text: "La priorité en cas d'incendie est :",
+    options: [
+      "Sauver le matériel",
+      "Éteindre le feu",
+      "La sécurité des personnes",
+      "Limiter les retards"
+    ],
+    correctIndex: 2
+  },
+  {
+    text: "En présence de fumées, l’agent doit :",
+    options: [
+      "S’approcher",
+      "Ventiler",
+      "Ne pas s’exposer et alerter",
+      "Ouvrir les portes"
+    ],
+    correctIndex: 2
+  }
+];
 
-/* QUESTIONS – inchangées */
-const QUESTIONS = [...]; // <-- garde exactement ton tableau QUESTIONS existant ici
-
+// --- LOGIQUE ---
 const $ = id => document.getElementById(id);
-let idx=0, timer=null, timeLeft=TIME_LIMIT, answers=[];
-const resp={service:"",last:"",first:""};
+let index = 0;
+let answers = [];
+let resp = {};
 
-function renderQuestion(){
-  const q=QUESTIONS[idx];
-  $("qIndex").textContent=idx+1;
-  $("questionText").textContent=q.text;
-  $("options").innerHTML="";
-  q.options.forEach((opt,i)=>{
-    const l=document.createElement("label");
-    l.innerHTML=`<input type="radio" name="quizOpt" value="${i}"> ${opt}`;
-    $("options").appendChild(l);
-  });
-  $("nextBtn").disabled=true;
-  $("options").onchange=()=>$("nextBtn").disabled=false;
-  resetTimer();
-}
-
-function resetTimer(){
-  clearInterval(timer);
-  timeLeft=TIME_LIMIT;
-  $("timeLeft").textContent=timeLeft;
-  $("progress").value=0;
-  timer=setInterval(()=>{
-    timeLeft--;
-    $("timeLeft").textContent=timeLeft;
-    $("progress").value=TIME_LIMIT-timeLeft;
-    if(timeLeft<=0){commitAnswer(true);nextQuestion();}
-  },1000);
-}
-
-function commitAnswer(timedOut=false){
-  const radios=document.getElementsByName("quizOpt");
-  let selected=null;
-  for(const r of radios){if(r.checked)selected=parseInt(r.value);}
-  answers.push({selected,isCorrect:selected===QUESTIONS[idx].correctIndex,timedOut});
-}
-
-function nextQuestion(){
-  idx++;
-  if(idx>=QUESTIONS.length){
-    clearInterval(timer);
-    $("quizCard").style.display="none";
-    $("finalCard").style.display="block";
-  } else renderQuestion();
-}
-
-$("serviceOrigin").onchange=()=>{
-  $("otherServiceWrap").style.display =
-    $("serviceOrigin").value==="Autre"?"block":"none";
-};
-
-$("startBtn").onclick=()=>{
-  const s=$("serviceOrigin").value;
-  if(!s){$("startWarn").style.display="block";return;}
-  resp.service=s==="Autre"?$("serviceOther").value:s;
-  resp.last=$("lastName").value;
-  resp.first=$("firstName").value;
-  $("startCard").style.display="none";
-  $("quizCard").style.display="block";
+$("startBtn").onclick = () => {
+  if (!$("serviceOrigin").value || !$("lastName").value || !$("firstName").value) {
+    $("warn").style.display = "block";
+    return;
+  }
+  resp.service = $("serviceOrigin").value;
+  resp.nom = $("lastName").value + " " + $("firstName").value;
+  $("startCard").classList.add("hidden");
+  $("quizCard").classList.remove("hidden");
   renderQuestion();
 };
 
-$("nextBtn").onclick=()=>{commitAnswer(false);nextQuestion();};
-$("skipBtn").onclick=()=>{commitAnswer(false);nextQuestion();};
+function renderQuestion() {
+  const q = QUESTIONS[index];
+  $("questionText").textContent = q.text;
+  $("options").innerHTML = "";
+  q.options.forEach((opt, i) => {
+    const lbl = document.createElement("label");
+    lbl.innerHTML = `<input type="radio" name="opt" value="${i}"> ${opt}`;
+    $("options").appendChild(lbl);
+  });
+  $("nextBtn").disabled = true;
+  $("options").onchange = () => $("nextBtn").disabled = false;
+}
 
-/* 🔥 ENVOI COMPATIBLE POSTE SNCF */
-$("sendBtn").onclick=()=>{
-  $("sendBtn").disabled=true;
-  $("sendStatus").textContent="Envoi des résultats…";
+$("nextBtn").onclick = () => {
+  const sel = document.querySelector("input[name='opt']:checked");
+  answers.push(sel ? Number(sel.value) : null);
+  index++;
+  if (index >= QUESTIONS.length) {
+    $("quizCard").classList.add("hidden");
+    $("finalCard").classList.remove("hidden");
+  } else {
+    renderQuestion();
+  }
+};
 
-  const payload={
-    submittedAtISO:new Date().toISOString(),
-    service:resp.service,
-    nom:resp.last+" "+resp.first,
-    score:answers.filter(a=>a.isCorrect).length+"/30",
-    details:JSON.stringify(answers),
-    freeText:$("freeText").value,
-    userAgent:navigator.userAgent
+// 🔥 ENVOI SANS ATTENTE (SNCF OK)
+$("sendBtn").onclick = () => {
+  const payload = {
+    date: new Date().toISOString(),
+    service: resp.service,
+    nom: resp.nom,
+    reponses: answers,
+    commentaire: $("freeText").value
   };
 
-  try{
-    fetch(APPS_SCRIPT_URL,{
-      method:"POST",
-      body:JSON.stringify(payload),
-      mode:"no-cors"
+  try {
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(payload)
     });
-  }catch(e){}
+  } catch (e) {}
 
-  $("finalCard").style.display="none";
-  $("doneCard").style.display="block";
+  $("finalCard").classList.add("hidden");
+  $("doneCard").classList.remove("hidden");
 };
 </script>
 </body>
