@@ -117,7 +117,7 @@
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0kqt1t0nhy3DVU6iJ4vQT4vDLfv_Gz7Jdoha3Ydx-FZdK8KAhdmQa73A3_VTMPt6xKA/exec";
   const TIME_LIMIT = 15;
 
-  // QUESTIONS (30 annoncées, mais ici la liste est la source de vérité)
+  // QUESTIONS
   const QUESTIONS = [
     { id:"Q1", text:"Qu’est-ce qui définit un incendie ?", options:["Un feu visible","Une combustion non maîtrisée","Toute émission de fumée","Hausse de température"], correctIndex:1 },
     { id:"Q2", text:"Élément ajouté au triangle du feu pour le tétraèdre :", options:["Pression","Radicaux libres","Électricité","Carburant"], correctIndex:1 },
@@ -143,6 +143,8 @@
     { id:"Q22", text:"Un extincteur eau pulvérisée est privilegié pour la classe :", options:["Solides (A)","Métaux (D)","Gaz (C)","huiles et graisses de cuisson (F)"], correctIndex:0 },
     { id:"Q23", text:"Un extincteur CO2 est privilegié pour les feux d'origine :", options:["Solides","Électrique / liquides","Gaz","Sans flamme"], correctIndex:1 },
     { id:"Q24", text:"Quel est le moyen d'extinction d'un extincteur à poudre :", options:["Refroidir","Couper réaction chimique","Fumées","Projections"], correctIndex:1 },
+
+    // Note: tu n'as pas Q25 dans ta liste -> total affiché sera automatique
     { id:"Q26", text:"Responsabilité pénale du chef d’escale engagée si :", options:["Incendie déclaré","Secours en retard","Faute ou négligence","Plainte d’un voyageur"], correctIndex:2 },
     { id:"Q27", text:"Point de rassemblement :", options:["Pause","Recenser / centraliser","Observer","Attendre"], correctIndex:1 },
     { id:"Q28", text:"Guide/serre-file :", options:["Éteindre","Organiser évacuation","Remplacer pompiers","Billets"], correctIndex:1 },
@@ -155,8 +157,8 @@
   const answers = [];
   const resp = { service:"", last:"", first:"" };
 
-  // === FLAMMES (particle emojis) ===
-  function launchFlames(durationMs = 1800) {
+  // === FLAMMES RÉALISTES (canvas) — ça pète ===
+  function launchFlames(durationMs = 2600, intensity = 2.0) {
     const existing = document.getElementById("flameCanvas");
     if (existing) existing.remove();
 
@@ -179,74 +181,211 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     resize();
+    window.addEventListener("resize", resize);
 
-    const emojis = ["🔥","🔥","🔥","✨"];
     const particles = [];
-    const start = performance.now();
-    let rafId;
+    const sparks = [];
 
-    function spawn() {
-      const spawnRate = 16;
-      for (let i = 0; i < spawnRate; i++) {
-        const size = 16 + Math.random() * 22;
-        particles.push({
-          x: Math.random() * window.innerWidth,
-          y: window.innerHeight + 30 + Math.random() * 30,
-          vx: (-0.9 + Math.random() * 1.8),
-          vy: -(2.5 + Math.random() * 4.5),
-          life: 650 + Math.random() * 800,
-          born: performance.now(),
-          size,
-          rot: (-0.18 + Math.random() * 0.36),
-          a: 1,
-          emoji: emojis[(Math.random() * emojis.length) | 0],
-        });
-      }
+    const W = () => window.innerWidth;
+    const H = () => window.innerHeight;
+    const baseX = () => W() * 0.5;
+    const baseY = () => H() + 30;
+
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+    const flameRate = Math.floor(220 * intensity);
+    const sparkRate = Math.floor(90 * intensity);
+    const jetWidth  = 210 * Math.sqrt(intensity);
+    const jetHeight = 1.0 + 0.45 * intensity;
+    const shakeMax  = 4.5 * clamp(intensity, 1, 2.4);
+
+    let tNoise = 0;
+    function noise(x) {
+      return Math.sin(x) * 0.6 + Math.sin(x * 0.37 + 1.7) * 0.3 + Math.sin(x * 0.11 + 2.9) * 0.1;
     }
+
+    function addFlameParticle(burst = false) {
+      particles.push({
+        x: baseX() + rand(-jetWidth, jetWidth) * (burst ? 1.35 : 1.0),
+        y: baseY(),
+        vx: rand(-1.7, 1.7) * (burst ? 1.7 : 1.0),
+        vy: -rand(3.6, 8.6) * jetHeight * (burst ? 1.25 : 1.0),
+        size: rand(12, 34) * (burst ? 1.2 : 1.0) * (0.95 + intensity * 0.25),
+        life: rand(650, 1150) / (0.85 + intensity * 0.12),
+        born: performance.now(),
+        heat: burst ? rand(0.7, 1.0) : rand(0.45, 0.95),
+        swirl: rand(0.7, 1.8) * (burst ? 1.25 : 1.0),
+        seed: Math.random() * 1000,
+      });
+    }
+
+    function addSpark(burst = false) {
+      sparks.push({
+        x: baseX() + rand(-jetWidth * 0.55, jetWidth * 0.55),
+        y: baseY() - rand(10, 110),
+        vx: rand(-3.0, 3.0) * (burst ? 2.0 : 1.0),
+        vy: -rand(6, 13) * (burst ? 1.45 : 1.0),
+        g: rand(0.08, 0.16),
+        size: rand(1.2, 3.2) * (burst ? 1.3 : 1.0),
+        life: rand(420, 980) / (0.9 + intensity * 0.2),
+        born: performance.now(),
+      });
+    }
+
+    function burst(power = 1.0) {
+      const nf = Math.floor(140 * intensity * power);
+      const ns = Math.floor(110 * intensity * power);
+      for (let i = 0; i < nf; i++) addFlameParticle(true);
+      for (let i = 0; i < ns; i++) addSpark(true);
+    }
+
+    burst(1.0);
+
+    const start = performance.now();
+    let last = start;
+    let rafId;
 
     function draw(now) {
       const elapsed = now - start;
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      const dt = Math.min(40, now - last);
+      last = now;
 
-      if (elapsed < durationMs) spawn();
+      if (elapsed < durationMs) {
+        const f = Math.floor((flameRate * dt) / 1000);
+        const s = Math.floor((sparkRate * dt) / 1000);
+        for (let i = 0; i < f; i++) addFlameParticle(false);
+        for (let i = 0; i < s; i++) addSpark(false);
+
+        if (Math.random() < 0.16 * intensity) burst(0.35);
+      }
+
+      ctx.clearRect(0, 0, W(), H());
+
+      const shake = (elapsed < durationMs) ? (Math.random() * 2 - 1) * shakeMax * 0.28 : 0;
+      const shakeY = (elapsed < durationMs) ? (Math.random() * 2 - 1) * shakeMax * 0.18 : 0;
+
+      ctx.save();
+      ctx.translate(shake, shakeY);
+      ctx.globalCompositeOperation = "lighter";
+      ctx.filter = "blur(12px)";
+      ctx.globalAlpha = 0.22 * clamp(intensity, 1, 2.4);
+      const glow = ctx.createRadialGradient(baseX(), H(), 20, baseX(), H(), 320 * intensity);
+      glow.addColorStop(0.0, "rgba(255,190,60,0.95)");
+      glow.addColorStop(0.35, "rgba(255,90,0,0.55)");
+      glow.addColorStop(1.0, "rgba(255,30,0,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(baseX(), H(), 300 * intensity, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      tNoise += dt * 0.004;
+
+      ctx.save();
+      ctx.translate(shake, shakeY);
+      ctx.globalCompositeOperation = "lighter";
 
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         const age = now - p.born;
         const t = age / p.life;
-        p.a = 1 - Math.min(1, Math.max(0, t));
+
+        if (t >= 1 || p.y < -140) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        const n = noise(tNoise + p.seed + p.y * 0.01);
+        const sway = n * 2.0 * p.swirl * (1.2 - t);
+        p.vx += sway * 0.02;
 
         p.x += p.vx;
         p.y += p.vy;
-        p.vy *= 0.995; // petit amorti
+        p.vy *= 0.992;
+        p.vx *= 0.985;
+
+        const size = p.size * (1.08 - t * 0.58);
+        const alpha = clamp(1.0 - t, 0, 1);
+        const heat = clamp(p.heat + (0.18 - t * 0.42), 0, 1);
+
+        const r = 255;
+        const g = Math.floor(80 + 170 * heat);
+        const b = Math.floor(10 + 30 * heat);
 
         ctx.save();
-        ctx.globalAlpha = p.a;
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot * age * 0.01);
-        ctx.font = `${p.size}px system-ui, Apple Color Emoji, Segoe UI Emoji`;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(p.emoji, 0, 0);
-        ctx.restore();
+        ctx.globalAlpha = alpha * (0.55 + intensity * 0.15);
 
-        if (age > p.life || p.y < -80 || p.a <= 0) particles.splice(i, 1);
+        ctx.filter = `blur(${10 + 12 * heat}px)`;
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
+        grad.addColorStop(0.0, `rgba(${r},${g},${b},0.95)`);
+        grad.addColorStop(0.35, `rgba(255,120,0,0.65)`);
+        grad.addColorStop(1.0, `rgba(120,0,0,0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y, size * 0.6, size * 1.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.filter = `blur(${3 + 5 * heat}px)`;
+        ctx.fillStyle = `rgba(255,${Math.floor(70 + 170 * heat)},0,0.55)`;
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y + size * 0.12, size * 0.22, size * 0.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
       }
 
-      if (elapsed < durationMs || particles.length > 0) {
+      ctx.filter = "none";
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        const age = now - s.born;
+        const t = age / s.life;
+
+        if (t >= 1 || s.y < -140) {
+          sparks.splice(i, 1);
+          continue;
+        }
+
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy += s.g;
+        s.vx *= 0.992;
+
+        const a = 1 - t;
+
+        ctx.save();
+        ctx.globalAlpha = a * 0.95;
+
+        ctx.strokeStyle = `rgba(255,220,120,${a})`;
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x - s.vx * 2.0, s.y - s.vy * 2.0);
+        ctx.stroke();
+
+        ctx.fillStyle = `rgba(255,245,180,${a})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      ctx.restore();
+
+      if (elapsed < durationMs || particles.length > 0 || sparks.length > 0) {
         rafId = requestAnimationFrame(draw);
       } else {
         cancelAnimationFrame(rafId);
-        canvas.remove();
         window.removeEventListener("resize", resize);
+        canvas.remove();
       }
     }
 
-    window.addEventListener("resize", resize);
     requestAnimationFrame(draw);
   }
 
-  // Affichage du total (évite le bug "30" alors que la liste change)
+  // Affichage du total (évite le bug "30" si la liste change)
   $("totalQ").textContent = QUESTIONS.length;
   $("totalQTop").textContent = QUESTIONS.length;
 
@@ -335,7 +474,6 @@
   $("nextBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
   $("skipBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
 
-  // ✅ ENVOI COMPATIBLE AVEC TON APPS SCRIPT
   $("sendBtn").onclick = () => {
     $("sendBtn").disabled = true;
     $("sendStatus").textContent = "Envoi des résultats…";
@@ -344,15 +482,12 @@
       submittedAtISO: new Date().toISOString(),
       startedAtISO: "",
       durationSeconds: "",
-
       serviceOrigin: resp.service,
       lastName: resp.last,
       firstName: resp.first,
-
       totalQuestions: QUESTIONS.length,
       answeredCount: answers.filter(a => a.selected !== null && a.selected !== undefined).length,
       correctCount: answers.filter(a => a.isCorrect).length,
-
       freeText: $("freeText").value || "",
       answers: answers
     };
@@ -368,8 +503,8 @@
     $("finalCard").style.display = "none";
     $("doneCard").style.display = "block";
 
-    // 🔥 Effet fin de quiz
-    launchFlames(1800);
+    // 🔥 Effet fin de quiz (fort)
+    launchFlames(2600, 2.0);
   };
 </script>
 </body>
