@@ -54,7 +54,7 @@
 
   <div class="container">
     <h1>QCM Culture Incendie</h1>
-    <p class="muted">30 questions • 15 secondes par question</p>
+    <p class="muted"><span id="totalQTop">30</span> questions • 15 secondes par question</p>
 
     <div id="startCard" class="card">
       <label>Service d’origine (obligatoire)</label>
@@ -88,7 +88,7 @@
 
     <div id="quizCard" class="card" style="display:none;">
       <div style="display:flex; justify-content: space-between;">
-        <span class="pill">Q <span id="qIndex">1</span>/30</span>
+        <span class="pill">Q <span id="qIndex">1</span>/<span id="totalQ">30</span></span>
         <span class="pill">Chrono: <span id="timeLeft">15</span>s</span>
       </div>
       <progress id="progress" value="0" max="15"></progress>
@@ -117,44 +117,138 @@
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0kqt1t0nhy3DVU6iJ4vQT4vDLfv_Gz7Jdoha3Ydx-FZdK8KAhdmQa73A3_VTMPt6xKA/exec";
   const TIME_LIMIT = 15;
 
-  // QUESTIONS (30)
+  // QUESTIONS (30 annoncées, mais ici la liste est la source de vérité)
   const QUESTIONS = [
     { id:"Q1", text:"Qu’est-ce qui définit un incendie ?", options:["Un feu visible","Une combustion non maîtrisée","Toute émission de fumée","Hausse de température"], correctIndex:1 },
     { id:"Q2", text:"Élément ajouté au triangle du feu pour le tétraèdre :", options:["Pression","Radicaux libres","Électricité","Carburant"], correctIndex:1 },
     { id:"Q3", text:"Supprimer un élément au triangle du feu entraîne :", options:["Ralentissement","Extinction","Explosion","Baisse de fumées"], correctIndex:1 },
-    { id:"Q4", text:"Montée des fumées chaudes au plafond :", options:["Conduction","Rayonnement","Convection","Diffusion"], correctIndex:2 },
+    { id:"Q4", text:"Le mode de propagation d'un incendie par montée des fumées chaudes au plafond se nomme :", options:["Conduction","Rayonnement","Convection","Diffusion"], correctIndex:2 },
     { id:"Q5", text:"Danger principal des fumées :", options:["Invisibles","Surtout CO2","Toxiques, chaudes et sans O2","SSI"], correctIndex:2 },
-    { id:"Q6", text:"Le CO est dangereux car :", options:["Visible","Incolore/inodore et mortel","Explose vite","Sans effet debout"], correctIndex:1 },
+    { id:"Q6", text:"Le monoxyde de carbonne est dangereux car :", options:["Visible","Incolore/inodore et mortel","Explose vite","Sans effet debout"], correctIndex:1 },
     { id:"Q7", text:"Un feu maîtrisable pour un agent formé Equipier de Premiére Intervention (CEV par exemple) est :", options:["Généralisé","Naissant, sans propagation","Épais","Derrière porte chaude"], correctIndex:1 },
-    { id:"Q8", text:"Priorité absolue en gare :", options:["Éteindre","Sécurité des personnes","Sauver matériel","Limiter retards"], correctIndex:1 },
-    { id:"Q9", text:"Étouffer un feu c'est :", options:["Refroidir","Supprimer combustible","Couper l'oxygène","Courant d'air"], correctIndex:2 },
-    { id:"Q10", text:"Quel signe indique qu’il ne faut pas ouvrir une porte (risque de phénomène thermique) ?:", options:["La poignée est froide","Pas de fumée visible","Porte/poignée chaude + fumées : on n’ouvre pas, on alerte","Le SSI est en défaut"], correctIndex:2 },
+    { id:"Q8", text:"En gare de Bayonne, la coupure totale d’électricité est :", options:["Immédiate et simple","Impossible en cas d’incendie","Complexe et non immédiate","Automatique dès l’alarme"], correctIndex:2 },
+    { id:"Q9", text:"Étouffer un feu c'est :", options:["Refroidir","Supprimer le combustible","Couper l'oxygène","Courant d'air"], correctIndex:2 },
+    { id:"Q10", text:"Quel signe indique qu’il ne faut pas ouvrir une porte (risque de phénomène thermique) ?:", options:["La poignée est froide","Pas de fumée visible","Porte/poignée chaude et/ou fumées","Le SSI est en défaut"], correctIndex:2 },
     { id:"Q11", text:"Règle face aux fumées (non équipé) :", options:["Identifier foyer","Approcher","Ne pas s'exposer, alerter","Ventiler"], correctIndex:2 },
-    { id:"Q12", text:"Ouvrir brutalement une porte en feu :", options:["Éteint le feu","Appel d'air / aggravation","Coupe électricité","Désactive détecteurs"], correctIndex:1 },
-    { id:"Q13", text:"La levée de doute sert à :", options:["Éteindre","Confirmer/infirmer le sinistre","Réarmer SSI","Évacuer tout"], correctIndex:1 },
-    { id:"Q14", text:"Principe en levée de doute :", options:["Sortir victimes","Extincteur préventif","Ne jamais s'exposer au danger","Attendre"], correctIndex:2 },
-    { id:"Q15", text:"Qui réarme le SSI après fausse alarme ?", options:["Le CEV","Tout le monde","Mainteneur seulement","Public"], correctIndex:0 },
-    { id:"Q16", text:"Départ feu non maîtrisable confirmé :", options:["Continuer seul","Alerte + sécurité + accueil","Réarmer","Prendre ascenseur"], correctIndex:1 },
-    { id:"Q17", text:"Alerte immédiate 18/112 si :", options:["Simple doute","Odeur légère","Fumées/feu/propagation","DM déclenché"], correctIndex:2 },
+    { id:"Q12", text:"Ouvrir brutalement une porte en feu :", options:["Éteint le feu","Génére un appel d'air","Peut suffire à souffler le feu","Risque de désactiver les détecteurs"], correctIndex:1 },
+    { id:"Q13", text:"La levée de doute signifie :", options:["Confirmer ou infirmer le fonctionnement du SSI","Confirmer/infirmer un incendie","Confirmer/infirmer le réarmement SSI","Confirmer/infirmer l'évacuation totale"], correctIndex:1 },
+    { id:"Q14", text:"Principe en levée de doute :", options:["Chercher les victimes","Aviser l'ensemble du personnel d'un danger","Ne jamais s'exposer au danger","Aerer au maximum les locaux pour chasser les fumées"], correctIndex:2 },
+    { id:"Q15", text:"Qui réarme le SSI après fausse alarme ?", options:["Le CEV","Tout le monde","Mainteneur seulement","l'astreinte SOL"], correctIndex:0 },
+    { id:"Q16", text:"Lors d'un feu non maîtrisable je :", options:["Alerte les secours + aide à l'evacuation + me rend auy point de rassemblement","Alerte le COGC + alerte les secours + lutte contre l'incendie","Réarme le SSI","Prendre ascenseur"], correctIndex:0 },
+    { id:"Q17", text:"Alerte immédiate 18/112 si :", options:["Simple doute","Odeur légère de brulé","Fumées/feu/propagation","DM déclenché"], correctIndex:2 },
     { id:"Q18", text:"Info utile aux secours :", options:["Cause probable","Lieu + Étendue/propagation","Nom chef de gare","Retards trains"], correctIndex:1 },
-    { id:"Q19", text:"Rôle du CEV pour les pompiers :", options:["Diriger","Interlocuteur site / infos","Exploitation","Intervenir"], correctIndex:1 },
-    { id:"Q20", text:"Suspicion de gaz :", options:["Lumières","Téléphone zone","Coupure d'urgence, alerter","Chercher fuite"], correctIndex:2 },
-    { id:"Q21", text:"Risque électrique BV :", options:["Toucher armoires","Coupure immédiate","Éviter zone / prévenir","Eau"], correctIndex:2 },
-    { id:"Q22", text:"Extincteur eau pulvérisée :", options:["Solides (A)","Métaux","Gaz","Tout"], correctIndex:0 },
-    { id:"Q23", text:"Extincteur CO2 :", options:["Classe A","Électrique / liquides","Gaz","Métaux"], correctIndex:1 },
-    { id:"Q24", text:"Extincteur poudre :", options:["Refroidir","Couper réaction chimique","Fumées","Projections"], correctIndex:1 },
-    { id:"Q25", text:"Danger majeur local fermé :", options:["Distance","Tester porte","Ouvrir grand pour voir","Alerter"], correctIndex:2 },
-    { id:"Q26", text:"Point de rassemblement :", options:["Pause","Recenser / centraliser","Observer","Attendre"], correctIndex:1 },
-    { id:"Q27", text:"Guide/serre-file :", options:["Éteindre","Organiser évacuation","Remplacer pompiers","Billets"], correctIndex:1 },
-    { id:"Q28", text:"Priorité victime :", options:["Cause","Sécurité + Alerte + Gestes","Exploitation","Photos"], correctIndex:1 },
-    { id:"Q29", text:"Fin de sinistre relève de :", options:["Public","Pompier (oral)","Responsabilité SNCF","Appelant"], correctIndex:2 },
-    { id:"Q30", text:"But du QCM :", options:["Sanctionner","Habiliter","Mesurer niveau initial","Remplacer pratique"], correctIndex:2 }
+    { id:"Q19", text:"Rôle du CEV pour les pompiers :", options:["Diriger les opérations de sauvetages et d'extinctions","Interlocuteur du site","S'assure du respect de la SEF par les secours","accompagner les secours au local sinistré"], correctIndex:1 },
+    { id:"Q20", text:"En cas de suspicion fuite de gaz ma premiére action est  :", options:["J'eteins les lumières et j'alerte","je coupe mon téléphone et j'alerte","Je manoeuvre les coupures d'urgences et j'alerte","Je cherche la fuite avec l'aide de l'AET si necessaire"], correctIndex:2 },
+    { id:"Q21", text:"La levée de doute doit être réalisée :", options:["Même en situation dangereuse","Sans se mettre en danger","Sans prévenir personne","Uniquement par les pompiers"], correctIndex:1 },
+    { id:"Q22", text:"Un extincteur eau pulvérisée est privilegié pour la classe :", options:["Solides (A)","Métaux (D)","Gaz (C)","huiles et graisses de cuisson (F)"], correctIndex:0 },
+    { id:"Q23", text:"Un extincteur CO2 est privilegié pour les feux d'origine :", options:["Solides","Électrique / liquides","Gaz","Sans flamme"], correctIndex:1 },
+    { id:"Q24", text:"Quel est le moyen d'extinction d'un extincteur à poudre :", options:["Refroidir","Couper réaction chimique","Fumées","Projections"], correctIndex:1 },
+    { id:"Q26", text:"Responsabilité pénale du chef d’escale engagée si :", options:["Incendie déclaré","Secours en retard","Faute ou négligence","Plainte d’un voyageur"], correctIndex:2 },
+    { id:"Q27", text:"Point de rassemblement :", options:["Pause","Recenser / centraliser","Observer","Attendre"], correctIndex:1 },
+    { id:"Q28", text:"Guide/serre-file :", options:["Éteindre","Organiser évacuation","Remplacer pompiers","Billets"], correctIndex:1 },
+    { id:"Q29", text:"Priorité victime :", options:["Cause","Sécurité + Alerte + Gestes","Exploitation","Photos"], correctIndex:1 },
+    { id:"Q30", text:"La reprise d'exploitation suite à un important sinistre en gare relève de :", options:["Prefet","Pompier (oral)","Astreinte SNCF","CEV"], correctIndex:2 },
   ];
 
   const $ = (id) => document.getElementById(id);
   let idx = 0, timer = null, timeLeft = TIME_LIMIT;
   const answers = [];
   const resp = { service:"", last:"", first:"" };
+
+  // === FLAMMES (particle emojis) ===
+  function launchFlames(durationMs = 1800) {
+    const existing = document.getElementById("flameCanvas");
+    if (existing) existing.remove();
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "flameCanvas";
+    canvas.style.position = "fixed";
+    canvas.style.inset = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "9999";
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+    function resize() {
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+
+    const emojis = ["🔥","🔥","🔥","✨"];
+    const particles = [];
+    const start = performance.now();
+    let rafId;
+
+    function spawn() {
+      const spawnRate = 16;
+      for (let i = 0; i < spawnRate; i++) {
+        const size = 16 + Math.random() * 22;
+        particles.push({
+          x: Math.random() * window.innerWidth,
+          y: window.innerHeight + 30 + Math.random() * 30,
+          vx: (-0.9 + Math.random() * 1.8),
+          vy: -(2.5 + Math.random() * 4.5),
+          life: 650 + Math.random() * 800,
+          born: performance.now(),
+          size,
+          rot: (-0.18 + Math.random() * 0.36),
+          a: 1,
+          emoji: emojis[(Math.random() * emojis.length) | 0],
+        });
+      }
+    }
+
+    function draw(now) {
+      const elapsed = now - start;
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      if (elapsed < durationMs) spawn();
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        const age = now - p.born;
+        const t = age / p.life;
+        p.a = 1 - Math.min(1, Math.max(0, t));
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy *= 0.995; // petit amorti
+
+        ctx.save();
+        ctx.globalAlpha = p.a;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * age * 0.01);
+        ctx.font = `${p.size}px system-ui, Apple Color Emoji, Segoe UI Emoji`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(p.emoji, 0, 0);
+        ctx.restore();
+
+        if (age > p.life || p.y < -80 || p.a <= 0) particles.splice(i, 1);
+      }
+
+      if (elapsed < durationMs || particles.length > 0) {
+        rafId = requestAnimationFrame(draw);
+      } else {
+        cancelAnimationFrame(rafId);
+        canvas.remove();
+        window.removeEventListener("resize", resize);
+      }
+    }
+
+    window.addEventListener("resize", resize);
+    requestAnimationFrame(draw);
+  }
+
+  // Affichage du total (évite le bug "30" alors que la liste change)
+  $("totalQ").textContent = QUESTIONS.length;
+  $("totalQTop").textContent = QUESTIONS.length;
 
   function renderQuestion() {
     const q = QUESTIONS[idx];
@@ -241,7 +335,7 @@
   $("nextBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
   $("skipBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
 
-  // ✅ ENVOI COMPATIBLE AVEC TON APPS SCRIPT (serviceOrigin/lastName/firstName/correctCount/answers)
+  // ✅ ENVOI COMPATIBLE AVEC TON APPS SCRIPT
   $("sendBtn").onclick = () => {
     $("sendBtn").disabled = true;
     $("sendStatus").textContent = "Envoi des résultats…";
@@ -273,6 +367,9 @@
 
     $("finalCard").style.display = "none";
     $("doneCard").style.display = "block";
+
+    // 🔥 Effet fin de quiz
+    launchFlames(1800);
   };
 </script>
 </body>
