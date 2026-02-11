@@ -7,7 +7,7 @@
 
   <style>
     :root { 
-      --card-bg: rgba(255,255,255,0.96); 
+      --card-bg: rgba(255,255,255,0.72); 
       --accent: #111;
       --sncf-blue: #0088ce;
       --border: rgba(0,0,0,0.1);
@@ -121,24 +121,24 @@
   const QUESTIONS = [
     { id:"Q1", text:"Qu’est-ce qui définit un incendie ?", options:["Un feu visible","Une combustion non maîtrisée","Toute émission de fumée","Hausse de température"], correctIndex:1 },
     { id:"Q2", text:"Élément ajouté au triangle du feu pour le tétraèdre :", options:["Pression","Radicaux libres","Électricité","Carburant"], correctIndex:1 },
-    { id:"Q3", text:"Supprimer un élément du tétraèdre entraîne :", options:["Ralentissement","Extinction","Explosion","Baisse de fumées"], correctIndex:1 },
+    { id:"Q3", text:"Supprimer un élément au triangle du feu entraîne :", options:["Ralentissement","Extinction","Explosion","Baisse de fumées"], correctIndex:1 },
     { id:"Q4", text:"Montée des fumées chaudes au plafond :", options:["Conduction","Rayonnement","Convection","Diffusion"], correctIndex:2 },
     { id:"Q5", text:"Danger principal des fumées :", options:["Invisibles","Surtout CO2","Toxiques, chaudes et sans O2","SSI"], correctIndex:2 },
     { id:"Q6", text:"Le CO est dangereux car :", options:["Visible","Incolore/inodore et mortel","Explose vite","Sans effet debout"], correctIndex:1 },
-    { id:"Q7", text:"Un feu maîtrisable EPI est :", options:["Généralisé","Naissant, sans propagation","Épais","Derrière porte chaude"], correctIndex:1 },
+    { id:"Q7", text:"Un feu maîtrisable pour un agent formé Equipier de Premiére Intervention (CEV par exemple) est :", options:["Généralisé","Naissant, sans propagation","Épais","Derrière porte chaude"], correctIndex:1 },
     { id:"Q8", text:"Priorité absolue en gare :", options:["Éteindre","Sécurité des personnes","Sauver matériel","Limiter retards"], correctIndex:1 },
     { id:"Q9", text:"Étouffer un feu c'est :", options:["Refroidir","Supprimer combustible","Couper l'oxygène","Courant d'air"], correctIndex:2 },
-    { id:"Q10", text:"Phase auto-entretenue :", options:["Inflammation","Combustion entretenue","Refroidissement","Condensation"], correctIndex:1 },
+    { id:"Q10", text:"Quel signe indique qu’il ne faut pas ouvrir une porte (risque de phénomène thermique) ?:", options:["La poignée est froide","Pas de fumée visible","Porte/poignée chaude + fumées : on n’ouvre pas, on alerte","Le SSI est en défaut"], correctIndex:2 },
     { id:"Q11", text:"Règle face aux fumées (non équipé) :", options:["Identifier foyer","Approcher","Ne pas s'exposer, alerter","Ventiler"], correctIndex:2 },
     { id:"Q12", text:"Ouvrir brutalement une porte en feu :", options:["Éteint le feu","Appel d'air / aggravation","Coupe électricité","Désactive détecteurs"], correctIndex:1 },
-    { id:"Q13", text:"La levée de doute sert à :", options:["Éteindre","Confirmer le sinistre","Réarmer SSI","Évacuer tout"], correctIndex:1 },
+    { id:"Q13", text:"La levée de doute sert à :", options:["Éteindre","Confirmer/infirmer le sinistre","Réarmer SSI","Évacuer tout"], correctIndex:1 },
     { id:"Q14", text:"Principe en levée de doute :", options:["Sortir victimes","Extincteur préventif","Ne jamais s'exposer au danger","Attendre"], correctIndex:2 },
     { id:"Q15", text:"Qui réarme le SSI après fausse alarme ?", options:["Le CEV","Tout le monde","Mainteneur seulement","Public"], correctIndex:0 },
     { id:"Q16", text:"Départ feu non maîtrisable confirmé :", options:["Continuer seul","Alerte + sécurité + accueil","Réarmer","Prendre ascenseur"], correctIndex:1 },
     { id:"Q17", text:"Alerte immédiate 18/112 si :", options:["Simple doute","Odeur légère","Fumées/feu/propagation","DM déclenché"], correctIndex:2 },
     { id:"Q18", text:"Info utile aux secours :", options:["Cause probable","Lieu + Étendue/propagation","Nom chef de gare","Retards trains"], correctIndex:1 },
     { id:"Q19", text:"Rôle du CEV pour les pompiers :", options:["Diriger","Interlocuteur site / infos","Exploitation","Intervenir"], correctIndex:1 },
-    { id:"Q20", text:"Suspicion de gaz :", options:["Lumières","Téléphone zone","Mise en sécurité, alerter","Chercher fuite"], correctIndex:2 },
+    { id:"Q20", text:"Suspicion de gaz :", options:["Lumières","Téléphone zone","Coupure d'urgence, alerter","Chercher fuite"], correctIndex:2 },
     { id:"Q21", text:"Risque électrique BV :", options:["Toucher armoires","Coupure immédiate","Éviter zone / prévenir","Eau"], correctIndex:2 },
     { id:"Q22", text:"Extincteur eau pulvérisée :", options:["Solides (A)","Métaux","Gaz","Tout"], correctIndex:0 },
     { id:"Q23", text:"Extincteur CO2 :", options:["Classe A","Électrique / liquides","Gaz","Métaux"], correctIndex:1 },
