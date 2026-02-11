@@ -1,106 +1,123 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QCM Culture Incendie - Diagnostic</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QCM Culture Incendie - Diagnostic</title>
 
-<style>
-  :root { --card-bg: rgba(255,255,255,0.96); --accent:#111; --border: rgba(0,0,0,0.12); }
-  *{box-sizing:border-box}
-  body{margin:0; min-height:100vh; font-family:system-ui,-apple-system,sans-serif; background:#0f1115; color:#111;}
-  .bg{position:fixed; inset:0; background:url("regiolis.jpg") center/cover no-repeat; z-index:-3;}
-  .overlay{position:fixed; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.55)); z-index:-2;}
-  .container{max-width:800px; margin:0 auto; padding:20px 15px; position:relative; z-index:1;}
-  h1{color:#fff; text-align:center; margin:10px 0 5px; text-shadow:0 2px 4px rgba(0,0,0,.5);}
-  .muted{color:rgba(255,255,255,.9); text-align:center; margin:0 0 20px; font-size:.95rem;}
-  .card{background:var(--card-bg); border-radius:16px; padding:20px; margin-bottom:15px; box-shadow:0 10px 25px rgba(0,0,0,.3);}
-  label{font-weight:800; display:block; margin:10px 0 5px;}
-  input[type="text"], select, textarea{width:100%; padding:12px; border-radius:10px; border:1px solid var(--border); font-size:1rem;}
-  textarea{min-height:90px; resize:vertical;}
-  button{width:100%; padding:14px; border-radius:12px; border:none; background:var(--accent); color:#fff; font-weight:800; font-size:1rem; cursor:pointer; margin-top:12px;}
-  button:disabled{opacity:.45; cursor:not-allowed;}
-  .danger{color:#d32f2f; font-weight:800; text-align:center; margin-top:10px;}
-  .pill{display:inline-block; background:#eee; padding:6px 12px; border-radius:20px; font-weight:800; font-size:.9rem;}
-  .options label{display:flex; gap:10px; align-items:center; padding:12px; border:1px solid #ddd; border-radius:12px; margin:10px 0; cursor:pointer;}
-  .options input{transform:scale(1.25);}
-  .ok{color:#2e7d32; font-weight:900; text-align:center;}
-</style>
+  <style>
+    :root { 
+      --card-bg: rgba(255,255,255,0.96); 
+      --accent: #111;
+      --sncf-blue: #0088ce;
+      --border: rgba(0,0,0,0.1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0; min-height: 100vh; color: #111; background: #0f1115;
+    }
+    .bg {
+      position: fixed; inset: 0;
+      background-image: url("regiolis.jpg");
+      background-size: cover; background-position: center;
+      z-index: -3; pointer-events: none;
+    }
+    .overlay {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+      z-index: -2; pointer-events: none;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px 15px; position: relative; z-index: 1; }
+    h1 { color: #fff; font-size: 1.6rem; text-align: center; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .muted { color: rgba(255,255,255,0.9); text-align: center; font-size: 0.9rem; margin-bottom: 20px; }
+    .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    label { font-weight: 700; display: block; margin-bottom: 5px; margin-top: 10px; }
+    input[type="text"], select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 1rem; margin-bottom: 10px; }
+    button { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    button.secondary { background: #fff; color: #111; border: 1px solid #ccc; }
+    .pill { background: #eee; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+    progress { width: 100%; height: 10px; margin: 15px 0; border-radius: 5px; }
+    #questionText { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 15px 0; }
+    .options label { display: flex; align-items: center; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
+    .options label:hover { background: #f9f9f9; }
+    .options input { transform: scale(1.3); margin-right: 12px; }
+    .danger { color: #d32f2f; font-weight: 700; }
+    .ok { color: #2e7d32; font-weight: 700; text-align: center; }
+  </style>
 </head>
 
 <body>
-<div class="bg"></div>
-<div class="overlay"></div>
+  <div class="bg"></div>
+  <div class="overlay"></div>
 
-<div class="container">
-  <h1>QCM Culture Incendie</h1>
-  <p class="muted">30 questions • 15 secondes par question</p>
+  <div class="container">
+    <h1>QCM Culture Incendie</h1>
+    <p class="muted">30 questions • 15 secondes par question</p>
 
-  <!-- START -->
-  <div id="startCard" class="card">
-    <label>Service d’origine (obligatoire)</label>
-    <select id="serviceOrigin">
-      <option value="">— Sélectionner —</option>
-      <option value="Escale">Escale</option>
-      <option value="Vente / Accueil">Vente / Accueil</option>
-      <option value="ASCT">ASCT</option>
-      <option value="Conducteur">Conducteur</option>
-      <option value="Sûreté">Sûreté</option>
-      <option value="Maintenance / Technique">Maintenance / Technique</option>
-      <option value="Gares & Connexions">Gares & Connexions</option>
-      <option value="Autre">Autre</option>
-    </select>
+    <div id="startCard" class="card">
+      <label>Service d’origine (obligatoire)</label>
+      <select id="serviceOrigin">
+        <option value="">— Sélectionner —</option>
+        <option value="Escale">Escale</option>
+        <option value="Vente / Accueil">Vente / Accueil</option>
+        <option value="ASCT">ASCT</option>
+        <option value="Conducteur">Conducteur</option>
+        <option value="Sûreté">Sûreté</option>
+        <option value="Maintenance / Technique">Maintenance / Technique</option>
+        <option value="Gares & Connexions">Gares & Connexions</option>
+        <option value="Autre">Autre</option>
+      </select>
 
-    <div id="otherServiceWrap" style="display:none; margin-top:10px;">
-      <input id="serviceOther" type="text" placeholder="Précisez votre service" />
+      <div id="otherServiceWrap" style="display:none;">
+        <input id="serviceOther" type="text" placeholder="Précisez votre service" />
+      </div>
+
+      <label>Nom (obligatoire)</label>
+      <input id="lastName" type="text" placeholder="Nom" />
+
+      <label>Prénom (obligatoire)</label>
+      <input id="firstName" type="text" placeholder="Prénom" />
+
+      <button id="startBtn">Démarrer le diagnostic</button>
+      <p id="startWarn" class="danger" style="display:none; text-align:center;">
+        Service + Nom + Prénom obligatoires.
+      </p>
     </div>
 
-    <label>Nom (obligatoire)</label>
-    <input id="lastName" type="text" placeholder="Nom" />
-
-    <label>Prénom (obligatoire)</label>
-    <input id="firstName" type="text" placeholder="Prénom" />
-
-    <button id="startBtn">Démarrer le diagnostic</button>
-    <p id="startWarn" class="danger" style="display:none;">
-      Service + Nom + Prénom obligatoires.
-    </p>
-  </div>
-
-  <!-- QUIZ -->
-  <div id="quizCard" class="card" style="display:none;">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span class="pill">Q <span id="qIndex">1</span>/30</span>
-      <span class="pill">Chrono: <span id="timeLeft">15</span>s</span>
+    <div id="quizCard" class="card" style="display:none;">
+      <div style="display:flex; justify-content: space-between;">
+        <span class="pill">Q <span id="qIndex">1</span>/30</span>
+        <span class="pill">Chrono: <span id="timeLeft">15</span>s</span>
+      </div>
+      <progress id="progress" value="0" max="15"></progress>
+      <div id="questionText">...</div>
+      <div id="options" class="options"></div>
+      <button id="nextBtn" disabled>Valider & Suivant</button>
+      <button id="skipBtn" class="secondary">Passer</button>
     </div>
-    <progress id="progress" value="0" max="15" style="width:100%; height:10px; margin:15px 0;"></progress>
-    <div id="questionText" style="font-size:1.2rem; font-weight:900; margin:10px 0 10px;">...</div>
-    <div id="options" class="options"></div>
-    <button id="nextBtn" disabled>Valider & Suivant</button>
-    <button id="skipBtn" style="background:#fff; color:#111; border:1px solid #ccc;">Passer</button>
-  </div>
 
-  <!-- FIN -->
-  <div id="finalCard" class="card" style="display:none;">
-    <h2 style="margin:0 0 10px;">Diagnostic terminé</h2>
-    <label>Un retour à nous faire ? (optionnel)</label>
-    <textarea id="freeText" placeholder="Difficultés, points flous..."></textarea>
-    <button id="sendBtn">Envoyer mes résultats</button>
-    <p id="sendStatus" style="text-align:center; font-weight:800;"></p>
-  </div>
+    <div id="finalCard" class="card" style="display:none;">
+      <h2 style="margin-top:0;">Diagnostic terminé</h2>
+      <label>Un retour à nous faire ? (optionnel)</label>
+      <textarea id="freeText" placeholder="Difficultés rencontrées, points flous..."></textarea>
+      <button id="sendBtn">Envoyer mes résultats</button>
+      <p id="sendStatus" style="text-align:center; font-weight:bold;"></p>
+    </div>
 
-  <div id="doneCard" class="card" style="display:none;">
-    <h2 class="ok">✅ Résultats envoyés</h2>
-    <p style="text-align:center;">Merci pour votre participation.</p>
+    <div id="doneCard" class="card" style="display:none;">
+      <h2 class="ok">✅ Résultats envoyés</h2>
+      <p style="text-align:center;">Merci pour votre participation.</p>
+    </div>
   </div>
-</div>
 
 <script>
-  // ⚠️ garde ton URL Apps Script (celle de ton 1er QCM)
+  // CONFIGURATION
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0kqt1t0nhy3DVU6iJ4vQT4vDLfv_Gz7Jdoha3Ydx-FZdK8KAhdmQa73A3_VTMPt6xKA/exec";
   const TIME_LIMIT = 15;
 
-  // ✅ TES 30 QUESTIONS D’ORIGINE (complètes)
+  // QUESTIONS (30)
   const QUESTIONS = [
     { id:"Q1", text:"Qu’est-ce qui définit un incendie ?", options:["Un feu visible","Une combustion non maîtrisée","Toute émission de fumée","Hausse de température"], correctIndex:1 },
     { id:"Q2", text:"Élément ajouté au triangle du feu pour le tétraèdre :", options:["Pression","Radicaux libres","Électricité","Carburant"], correctIndex:1 },
@@ -135,11 +152,8 @@
   ];
 
   const $ = (id) => document.getElementById(id);
-
-  let idx = 0;
-  let timer = null;
-  let timeLeft = TIME_LIMIT;
-  const answers = []; // {id, selected, isCorrect, timedOut}
+  let idx = 0, timer = null, timeLeft = TIME_LIMIT;
+  const answers = [];
   const resp = { service:"", last:"", first:"" };
 
   function renderQuestion() {
@@ -170,10 +184,7 @@
       timeLeft--;
       $("timeLeft").textContent = timeLeft;
       $("progress").value = TIME_LIMIT - timeLeft;
-      if (timeLeft <= 0) {
-        commitAnswer(true);
-        nextQuestion();
-      }
+      if (timeLeft <= 0) { commitAnswer(true); nextQuestion(); }
     }, 1000);
   }
 
@@ -181,9 +192,8 @@
     const q = QUESTIONS[idx];
     const radios = document.getElementsByName("quizOpt");
     let selected = null;
-    for (const r of radios) {
-      if (r.checked) selected = parseInt(r.value, 10);
-    }
+    for (const r of radios) { if (r.checked) selected = parseInt(r.value, 10); }
+
     answers.push({
       id: q.id,
       selected,
@@ -213,7 +223,6 @@
     const first = $("firstName").value.trim();
     const other = $("serviceOther").value.trim();
 
-    // Obligatoires
     if (!s || !last || !first || (s === "Autre" && !other)) {
       $("startWarn").style.display = "block";
       return;
@@ -221,9 +230,8 @@
     $("startWarn").style.display = "none";
 
     resp.service = (s === "Autre") ? other : s;
-    resp.last  = $("lastName").value.trim();
-    resp.first = $("firstName").value.trim();
-
+    resp.last = last;
+    resp.first = first;
 
     $("startCard").style.display = "none";
     $("quizCard").style.display = "block";
@@ -233,48 +241,27 @@
   $("nextBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
   $("skipBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
 
-  // 🔥 Envoi compatible poste SNCF : pas d'attente réseau
+  // ✅ ENVOI COMPATIBLE AVEC TON APPS SCRIPT (serviceOrigin/lastName/firstName/correctCount/answers)
   $("sendBtn").onclick = () => {
-  $("sendBtn").disabled = true;
-  $("sendStatus").textContent = "Envoi des résultats…";
+    $("sendBtn").disabled = true;
+    $("sendStatus").textContent = "Envoi des résultats…";
 
-  // ⚠️ sécurité : si jamais réponses vides
-  const totalQuestions = QUESTIONS.length;
-  const answeredCount = answers.filter(a => a && a.selected !== null && a.selected !== undefined).length;
-  const correctCount  = answers.filter(a => a && a.isCorrect === true).length;
+    const payload = {
+      submittedAtISO: new Date().toISOString(),
+      startedAtISO: "",
+      durationSeconds: "",
 
-  const payload = {
-    submittedAtISO: new Date().toISOString(),
-    startedAtISO: "",                  // optionnel
-    durationSeconds: "",               // optionnel
+      serviceOrigin: resp.service,
+      lastName: resp.last,
+      firstName: resp.first,
 
-    serviceOrigin: resp.service || "",
-    lastName: resp.last || "",
-    firstName: resp.first || "",
+      totalQuestions: QUESTIONS.length,
+      answeredCount: answers.filter(a => a.selected !== null && a.selected !== undefined).length,
+      correctCount: answers.filter(a => a.isCorrect).length,
 
-    totalQuestions,
-    answeredCount,
-    correctCount,
-
-    freeText: $("freeText").value || "",
-
-    // ✅ IMPORTANT : ton Apps Script attend "answers"
-    answers: answers
-  };
-
-  try {
-    fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify(payload)
-    });
-  } catch (e) {}
-
-  $("finalCard").style.display = "none";
-  $("doneCard").style.display = "block";
-};
-
-
+      freeText: $("freeText").value || "",
+      answers: answers
+    };
 
     try {
       fetch(APPS_SCRIPT_URL, {
@@ -282,9 +269,7 @@
         mode: "no-cors",
         body: JSON.stringify(payload)
       });
-    } catch (e) {
-      // volontairement ignoré
-    }
+    } catch (e) {}
 
     $("finalCard").style.display = "none";
     $("doneCard").style.display = "block";
