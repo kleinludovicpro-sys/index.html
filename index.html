@@ -1,511 +1,500 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>QCM Culture Incendie - Diagnostic</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QCM Culture Incendie - Diagnostic</title>
 
-  <style>
-    :root { 
-      --card-bg: rgba(255,255,255,0.72); 
-      --accent: #111;
-      --sncf-blue: #0088ce;
-      --border: rgba(0,0,0,0.1);
-    }
-    * { box-sizing: border-box; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      margin: 0; min-height: 100vh; color: #111; background: #0f1115;
-    }
-    .bg {
-      position: fixed; inset: 0;
-      background-image: url("regiolis.jpg");
-      background-size: cover; background-position: center;
-      z-index: -3; pointer-events: none;
-    }
-    .overlay {
-      position: fixed; inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
-      z-index: -2; pointer-events: none;
-    }
-    .container { max-width: 800px; margin: 0 auto; padding: 20px 15px; position: relative; z-index: 1; }
-    h1 { color: #fff; font-size: 1.6rem; text-align: center; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    .muted { color: rgba(255,255,255,0.9); text-align: center; font-size: 0.9rem; margin-bottom: 20px; }
-    .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-    label { font-weight: 700; display: block; margin-bottom: 5px; margin-top: 10px; }
-    input[type="text"], select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 1rem; margin-bottom: 10px; }
-    button { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 10px; }
-    button:disabled { opacity: 0.4; cursor: not-allowed; }
-    button.secondary { background: #fff; color: #111; border: 1px solid #ccc; }
-    .pill { background: #eee; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
-    progress { width: 100%; height: 10px; margin: 15px 0; border-radius: 5px; }
-    #questionText { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 15px 0; }
-    .options label { display: flex; align-items: center; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
-    .options label:hover { background: #f9f9f9; }
-    .options input { transform: scale(1.3); margin-right: 12px; }
-    .danger { color: #d32f2f; font-weight: 700; }
-    .ok { color: #2e7d32; font-weight: 700; text-align: center; }
-  </style>
+  <style>
+    :root { 
+      --card-bg: rgba(255,255,255,0.72); 
+      --accent: #111;
+      --sncf-blue: #0088ce;
+      --border: rgba(0,0,0,0.1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0; min-height: 100vh; color: #111; background: #0f1115;
+    }
+    .bg {
+      position: fixed; inset: 0;
+      background-image: url("regiolis.jpg");
+      background-size: cover; background-position: center;
+      z-index: -3; pointer-events: none;
+    }
+    .overlay {
+      position: fixed; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+      z-index: -2; pointer-events: none;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 20px 15px; position: relative; z-index: 1; }
+    h1 { color: #fff; font-size: 1.6rem; text-align: center; margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+    .muted { color: rgba(255,255,255,0.9); text-align: center; font-size: 0.9rem; margin-bottom: 20px; }
+    .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    label { font-weight: 700; display: block; margin-bottom: 5px; margin-top: 10px; }
+    input[type="text"], select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 1rem; margin-bottom: 10px; }
+    button { width: 100%; padding: 14px; border-radius: 10px; border: none; background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    button.secondary { background: #fff; color: #111; border: 1px solid #ccc; }
+    .pill { background: #eee; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; }
+    progress { width: 100%; height: 10px; margin: 15px 0; border-radius: 5px; }
+    #questionText { font-size: 1.25rem; font-weight: 800; line-height: 1.3; margin: 15px 0; }
+    .options label { display: flex; align-items: center; padding: 12px; border: 1px solid #ddd; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: background 0.2s; }
+    .options label:hover { background: #f9f9f9; }
+    .options input { transform: scale(1.3); margin-right: 12px; }
+    .danger { color: #d32f2f; font-weight: 700; }
+    .ok { color: #2e7d32; font-weight: 700; text-align: center; }
+  </style>
 </head>
 
 <body>
-  <div class="bg"></div>
-  <div class="overlay"></div>
+  <div class="bg"></div>
+  <div class="overlay"></div>
 
-  <div class="container">
-    <h1>QCM Culture Incendie</h1>
-    <p class="muted"><span id="totalQTop">30</span> questions • 15 secondes par question</p>
+  <div class="container">
+    <h1>QCM Culture Incendie</h1>
+    <p class="muted"><span id="totalQTop">30</span> questions • 15 secondes par question</p>
 
-    <div id="startCard" class="card">
-      <label>Service d’origine (obligatoire)</label>
-      <select id="serviceOrigin">
-        <option value="">— Sélectionner —</option>
-        <option value="Escale">Escale</option>
-        <option value="Vente / Accueil">Vente / Accueil</option>
-        <option value="ASCT">ASCT</option>
-        <option value="Conducteur">Conducteur</option>
-        <option value="Sûreté">Sûreté</option>
-        <option value="Maintenance / Technique">Maintenance / Technique</option>
-        <option value="Gares & Connexions">Gares & Connexions</option>
-        <option value="Autre">Autre</option>
-      </select>
+    <div id="startCard" class="card">
+      <label>Service d’origine (obligatoire)</label>
+      <select id="serviceOrigin">
+        <option value="">— Sélectionner —</option>
+        <option value="Escale">Escale</option>
+        <option value="Vente / Accueil">Vente / Accueil</option>
+        <option value="ASCT">ASCT</option>
+        <option value="Conducteur">Conducteur</option>
+        <option value="Sûreté">Sûreté</option>
+        <option value="Maintenance / Technique">Maintenance / Technique</option>
+        <option value="Gares & Connexions">Gares & Connexions</option>
+        <option value="Autre">Autre</option>
+      </select>
 
-      <div id="otherServiceWrap" style="display:none;">
-        <input id="serviceOther" type="text" placeholder="Précisez votre service" />
-      </div>
+      <div id="otherServiceWrap" style="display:none;">
+        <input id="serviceOther" type="text" placeholder="Précisez votre service" />
+      </div>
 
-      <label>Nom (obligatoire)</label>
-      <input id="lastName" type="text" placeholder="Nom" />
+      <label>Nom (obligatoire)</label>
+      <input id="lastName" type="text" placeholder="Nom" />
 
-      <label>Prénom (obligatoire)</label>
-      <input id="firstName" type="text" placeholder="Prénom" />
+      <label>Prénom (obligatoire)</label>
+      <input id="firstName" type="text" placeholder="Prénom" />
 
-      <button id="startBtn">Démarrer le diagnostic</button>
-      <p id="startWarn" class="danger" style="display:none; text-align:center;">
-        Service + Nom + Prénom obligatoires.
-      </p>
-    </div>
+      <button id="startBtn">Démarrer le diagnostic</button>
+      <p id="startWarn" class="danger" style="display:none; text-align:center;">
+        Service + Nom + Prénom obligatoires.
+      </p>
+    </div>
 
-    <div id="quizCard" class="card" style="display:none;">
-      <div style="display:flex; justify-content: space-between;">
-        <span class="pill">Q <span id="qIndex">1</span>/<span id="totalQ">30</span></span>
-        <span class="pill">Chrono: <span id="timeLeft">15</span>s</span>
-      </div>
-      <progress id="progress" value="0" max="15"></progress>
-      <div id="questionText">...</div>
-      <div id="options" class="options"></div>
-      <button id="nextBtn" disabled>Valider & Suivant</button>
-      <button id="skipBtn" class="secondary">Passer</button>
-    </div>
+    <div id="quizCard" class="card" style="display:none;">
+      <div style="display:flex; justify-content: space-between;">
+        <span class="pill">Q <span id="qIndex">1</span>/<span id="totalQ">30</span></span>
+        <span class="pill">Chrono: <span id="timeLeft">15</span>s</span>
+      </div>
+      <progress id="progress" value="0" max="15"></progress>
+      <div id="questionText">...</div>
+      <div id="options" class="options"></div>
+      <button id="nextBtn" disabled>Valider & Suivant</button>
+      <button id="skipBtn" class="secondary">Passer</button>
+    </div>
 
-    <div id="finalCard" class="card" style="display:none;">
-      <h2 style="margin-top:0;">Diagnostic terminé</h2>
-      <label>Un retour à nous faire ? (optionnel)</label>
-      <textarea id="freeText" placeholder="Difficultés rencontrées, points flous..."></textarea>
-      <button id="sendBtn">Envoyer mes résultats</button>
-      <p id="sendStatus" style="text-align:center; font-weight:bold;"></p>
-    </div>
+    <div id="finalCard" class="card" style="display:none;">
+      <h2 style="margin-top:0;">Diagnostic terminé</h2>
+      <label>Un retour à nous faire ? (optionnel)</label>
+      <textarea id="freeText" placeholder="Difficultés rencontrées, points flous..."></textarea>
+      <button id="sendBtn">Envoyer mes résultats</button>
+      <p id="sendStatus" style="text-align:center; font-weight:bold;"></p>
+    </div>
 
-    <div id="doneCard" class="card" style="display:none;">
-      <h2 class="ok">✅ Résultats envoyés</h2>
-      <p style="text-align:center;">Merci pour votre participation.</p>
-    </div>
-  </div>
+    <div id="doneCard" class="card" style="display:none;">
+      <h2 class="ok">✅ Résultats envoyés</h2>
+      <p style="text-align:center;">Merci pour votre participation.</p>
+    </div>
+  </div>
 
 <script>
-  // CONFIGURATION
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0kqt1t0nhy3DVU6iJ4vQT4vDLfv_Gz7Jdoha3Ydx-FZdK8KAhdmQa73A3_VTMPt6xKA/exec";
-  const TIME_LIMIT = 15;
-
-  // QUESTIONS
-  const QUESTIONS = [
-    { id:"Q1", text:"Qu’est-ce qui définit un incendie ?", options:["Un feu visible","Une combustion non maîtrisée","Toute émission de fumée","Hausse de température"], correctIndex:1 },
-    { id:"Q2", text:"Élément ajouté au triangle du feu pour le tétraèdre :", options:["Pression","Radicaux libres","Électricité","Carburant"], correctIndex:1 },
-    { id:"Q3", text:"Supprimer un élément au triangle du feu entraîne :", options:["Ralentissement","Extinction","Explosion","Baisse de fumées"], correctIndex:1 },
-    { id:"Q4", text:"Le mode de propagation d'un incendie par montée des fumées chaudes au plafond se nomme :", options:["Conduction","Rayonnement","Convection","Diffusion"], correctIndex:2 },
-    { id:"Q5", text:"Danger principal des fumées :", options:["Invisibles","Surtout CO2","Toxiques, chaudes et sans O2","SSI"], correctIndex:2 },
-    { id:"Q6", text:"Le monoxyde de carbonne est dangereux car :", options:["Visible","Incolore/inodore et mortel","Explose vite","Sans effet debout"], correctIndex:1 },
-    { id:"Q7", text:"Un feu maîtrisable pour un agent formé Equipier de Premiére Intervention (CEV par exemple) est :", options:["Généralisé","Naissant, sans propagation","Épais","Derrière porte chaude"], correctIndex:1 },
-    { id:"Q8", text:"En gare de Bayonne, la coupure totale d’électricité est :", options:["Immédiate et simple","Impossible en cas d’incendie","Complexe et non immédiate","Automatique dès l’alarme"], correctIndex:2 },
-    { id:"Q9", text:"Étouffer un feu c'est :", options:["Refroidir","Supprimer le combustible","Couper l'oxygène","Courant d'air"], correctIndex:2 },
-    { id:"Q10", text:"Quel signe indique qu’il ne faut pas ouvrir une porte (risque de phénomène thermique) ?:", options:["La poignée est froide","Pas de fumée visible","Porte/poignée chaude et/ou fumées","Le SSI est en défaut"], correctIndex:2 },
-    { id:"Q11", text:"Règle face aux fumées (non équipé) :", options:["Identifier foyer","Approcher","Ne pas s'exposer, alerter","Ventiler"], correctIndex:2 },
-    { id:"Q12", text:"Ouvrir brutalement une porte en feu :", options:["Éteint le feu","Génére un appel d'air","Peut suffire à souffler le feu","Risque de désactiver les détecteurs"], correctIndex:1 },
-    { id:"Q13", text:"La levée de doute signifie :", options:["Confirmer ou infirmer le fonctionnement du SSI","Confirmer/infirmer un incendie","Confirmer/infirmer le réarmement SSI","Confirmer/infirmer l'évacuation totale"], correctIndex:1 },
-    { id:"Q14", text:"Principe en levée de doute :", options:["Chercher les victimes","Aviser l'ensemble du personnel d'un danger","Ne jamais s'exposer au danger","Aerer au maximum les locaux pour chasser les fumées"], correctIndex:2 },
-    { id:"Q15", text:"Qui réarme le SSI après fausse alarme ?", options:["Le CEV","Tout le monde","Mainteneur seulement","l'astreinte SOL"], correctIndex:0 },
-    { id:"Q16", text:"Lors d'un feu non maîtrisable je :", options:["Alerte les secours + aide à l'evacuation + me rend auy point de rassemblement","Alerte le COGC + alerte les secours + lutte contre l'incendie","Réarme le SSI","Prendre ascenseur"], correctIndex:0 },
-    { id:"Q17", text:"Alerte immédiate 18/112 si :", options:["Simple doute","Odeur légère de brulé","Fumées/feu/propagation","DM déclenché"], correctIndex:2 },
-    { id:"Q18", text:"Info utile aux secours :", options:["Cause probable","Lieu + Étendue/propagation","Nom chef de gare","Retards trains"], correctIndex:1 },
-    { id:"Q19", text:"Rôle du CEV pour les pompiers :", options:["Diriger les opérations de sauvetages et d'extinctions","Interlocuteur du site","S'assure du respect de la SEF par les secours","accompagner les secours au local sinistré"], correctIndex:1 },
-    { id:"Q20", text:"En cas de suspicion fuite de gaz ma premiére action est  :", options:["J'eteins les lumières et j'alerte","je coupe mon téléphone et j'alerte","Je manoeuvre les coupures d'urgences et j'alerte","Je cherche la fuite avec l'aide de l'AET si necessaire"], correctIndex:2 },
-    { id:"Q21", text:"La levée de doute doit être réalisée :", options:["Même en situation dangereuse","Sans se mettre en danger","Sans prévenir personne","Uniquement par les pompiers"], correctIndex:1 },
-    { id:"Q22", text:"Un extincteur eau pulvérisée est privilegié pour la classe :", options:["Solides (A)","Métaux (D)","Gaz (C)","huiles et graisses de cuisson (F)"], correctIndex:0 },
-    { id:"Q23", text:"Un extincteur CO2 est privilegié pour les feux d'origine :", options:["Solides","Électrique / liquides","Gaz","Sans flamme"], correctIndex:1 },
-    { id:"Q24", text:"Quel est le moyen d'extinction d'un extincteur à poudre :", options:["Refroidir","Couper réaction chimique","Fumées","Projections"], correctIndex:1 },
-
-    // Note: tu n'as pas Q25 dans ta liste -> total affiché sera automatique
-    { id:"Q26", text:"Responsabilité pénale du chef d’escale engagée si :", options:["Incendie déclaré","Secours en retard","Faute ou négligence","Plainte d’un voyageur"], correctIndex:2 },
-    { id:"Q27", text:"Point de rassemblement :", options:["Pause","Recenser / centraliser","Observer","Attendre"], correctIndex:1 },
-    { id:"Q28", text:"Guide/serre-file :", options:["Éteindre","Organiser évacuation","Remplacer pompiers","Billets"], correctIndex:1 },
-    { id:"Q29", text:"Priorité victime :", options:["Cause","Sécurité + Alerte + Gestes","Exploitation","Photos"], correctIndex:1 },
-    { id:"Q30", text:"La reprise d'exploitation suite à un important sinistre en gare relève de :", options:["Prefet","Pompier (oral)","Astreinte SNCF","CEV"], correctIndex:2 },
-  ];
-
-  const $ = (id) => document.getElementById(id);
-  let idx = 0, timer = null, timeLeft = TIME_LIMIT;
-  const answers = [];
-  const resp = { service:"", last:"", first:"" };
-
-  // === FLAMMES RÉALISTES (canvas) — ça pète ===
-  function launchFlames(durationMs = 2600, intensity = 2.0) {
-    const existing = document.getElementById("flameCanvas");
-    if (existing) existing.remove();
-
-    const canvas = document.createElement("canvas");
-    canvas.id = "flameCanvas";
-    canvas.style.position = "fixed";
-    canvas.style.inset = "0";
-    canvas.style.pointerEvents = "none";
-    canvas.style.zIndex = "9999";
-    document.body.appendChild(canvas);
-
-    const ctx = canvas.getContext("2d");
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
-
-    function resize() {
-      canvas.width = Math.floor(window.innerWidth * dpr);
-      canvas.height = Math.floor(window.innerHeight * dpr);
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    resize();
-    window.addEventListener("resize", resize);
-
-    const particles = [];
-    const sparks = [];
-
-    const W = () => window.innerWidth;
-    const H = () => window.innerHeight;
-    const baseX = () => W() * 0.5;
-    const baseY = () => H() + 30;
-
-    const rand = (a, b) => a + Math.random() * (b - a);
-    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-
-    const flameRate = Math.floor(220 * intensity);
-    const sparkRate = Math.floor(90 * intensity);
-    const jetWidth  = 210 * Math.sqrt(intensity);
-    const jetHeight = 1.0 + 0.45 * intensity;
-    const shakeMax  = 4.5 * clamp(intensity, 1, 2.4);
-
-    let tNoise = 0;
-    function noise(x) {
-      return Math.sin(x) * 0.6 + Math.sin(x * 0.37 + 1.7) * 0.3 + Math.sin(x * 0.11 + 2.9) * 0.1;
-    }
-
-    function addFlameParticle(burst = false) {
-      particles.push({
-        x: baseX() + rand(-jetWidth, jetWidth) * (burst ? 1.35 : 1.0),
-        y: baseY(),
-        vx: rand(-1.7, 1.7) * (burst ? 1.7 : 1.0),
-        vy: -rand(3.6, 8.6) * jetHeight * (burst ? 1.25 : 1.0),
-        size: rand(12, 34) * (burst ? 1.2 : 1.0) * (0.95 + intensity * 0.25),
-        life: rand(650, 1150) / (0.85 + intensity * 0.12),
-        born: performance.now(),
-        heat: burst ? rand(0.7, 1.0) : rand(0.45, 0.95),
-        swirl: rand(0.7, 1.8) * (burst ? 1.25 : 1.0),
-        seed: Math.random() * 1000,
-      });
-    }
-
-    function addSpark(burst = false) {
-      sparks.push({
-        x: baseX() + rand(-jetWidth * 0.55, jetWidth * 0.55),
-        y: baseY() - rand(10, 110),
-        vx: rand(-3.0, 3.0) * (burst ? 2.0 : 1.0),
-        vy: -rand(6, 13) * (burst ? 1.45 : 1.0),
-        g: rand(0.08, 0.16),
-        size: rand(1.2, 3.2) * (burst ? 1.3 : 1.0),
-        life: rand(420, 980) / (0.9 + intensity * 0.2),
-        born: performance.now(),
-      });
-    }
-
-    function burst(power = 1.0) {
-      const nf = Math.floor(140 * intensity * power);
-      const ns = Math.floor(110 * intensity * power);
-      for (let i = 0; i < nf; i++) addFlameParticle(true);
-      for (let i = 0; i < ns; i++) addSpark(true);
-    }
-
-    burst(1.0);
-
-    const start = performance.now();
-    let last = start;
-    let rafId;
-
-    function draw(now) {
-      const elapsed = now - start;
-      const dt = Math.min(40, now - last);
-      last = now;
-
-      if (elapsed < durationMs) {
-        const f = Math.floor((flameRate * dt) / 1000);
-        const s = Math.floor((sparkRate * dt) / 1000);
-        for (let i = 0; i < f; i++) addFlameParticle(false);
-        for (let i = 0; i < s; i++) addSpark(false);
-
-        if (Math.random() < 0.16 * intensity) burst(0.35);
-      }
-
-      ctx.clearRect(0, 0, W(), H());
-
-      const shake = (elapsed < durationMs) ? (Math.random() * 2 - 1) * shakeMax * 0.28 : 0;
-      const shakeY = (elapsed < durationMs) ? (Math.random() * 2 - 1) * shakeMax * 0.18 : 0;
-
-      ctx.save();
-      ctx.translate(shake, shakeY);
-      ctx.globalCompositeOperation = "lighter";
-      ctx.filter = "blur(12px)";
-      ctx.globalAlpha = 0.22 * clamp(intensity, 1, 2.4);
-      const glow = ctx.createRadialGradient(baseX(), H(), 20, baseX(), H(), 320 * intensity);
-      glow.addColorStop(0.0, "rgba(255,190,60,0.95)");
-      glow.addColorStop(0.35, "rgba(255,90,0,0.55)");
-      glow.addColorStop(1.0, "rgba(255,30,0,0)");
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(baseX(), H(), 300 * intensity, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      tNoise += dt * 0.004;
-
-      ctx.save();
-      ctx.translate(shake, shakeY);
-      ctx.globalCompositeOperation = "lighter";
-
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        const age = now - p.born;
-        const t = age / p.life;
-
-        if (t >= 1 || p.y < -140) {
-          particles.splice(i, 1);
-          continue;
-        }
-
-        const n = noise(tNoise + p.seed + p.y * 0.01);
-        const sway = n * 2.0 * p.swirl * (1.2 - t);
-        p.vx += sway * 0.02;
-
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vy *= 0.992;
-        p.vx *= 0.985;
-
-        const size = p.size * (1.08 - t * 0.58);
-        const alpha = clamp(1.0 - t, 0, 1);
-        const heat = clamp(p.heat + (0.18 - t * 0.42), 0, 1);
-
-        const r = 255;
-        const g = Math.floor(80 + 170 * heat);
-        const b = Math.floor(10 + 30 * heat);
-
-        ctx.save();
-        ctx.globalAlpha = alpha * (0.55 + intensity * 0.15);
-
-        ctx.filter = `blur(${10 + 12 * heat}px)`;
-        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
-        grad.addColorStop(0.0, `rgba(${r},${g},${b},0.95)`);
-        grad.addColorStop(0.35, `rgba(255,120,0,0.65)`);
-        grad.addColorStop(1.0, `rgba(120,0,0,0)`);
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.ellipse(p.x, p.y, size * 0.6, size * 1.1, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.filter = `blur(${3 + 5 * heat}px)`;
-        ctx.fillStyle = `rgba(255,${Math.floor(70 + 170 * heat)},0,0.55)`;
-        ctx.beginPath();
-        ctx.ellipse(p.x, p.y + size * 0.12, size * 0.22, size * 0.6, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
-      }
-
-      ctx.filter = "none";
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const s = sparks[i];
-        const age = now - s.born;
-        const t = age / s.life;
-
-        if (t >= 1 || s.y < -140) {
-          sparks.splice(i, 1);
-          continue;
-        }
-
-        s.x += s.vx;
-        s.y += s.vy;
-        s.vy += s.g;
-        s.vx *= 0.992;
-
-        const a = 1 - t;
-
-        ctx.save();
-        ctx.globalAlpha = a * 0.95;
-
-        ctx.strokeStyle = `rgba(255,220,120,${a})`;
-        ctx.lineWidth = 1.3;
-        ctx.beginPath();
-        ctx.moveTo(s.x, s.y);
-        ctx.lineTo(s.x - s.vx * 2.0, s.y - s.vy * 2.0);
-        ctx.stroke();
-
-        ctx.fillStyle = `rgba(255,245,180,${a})`;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
-      }
-
-      ctx.restore();
-
-      if (elapsed < durationMs || particles.length > 0 || sparks.length > 0) {
-        rafId = requestAnimationFrame(draw);
-      } else {
-        cancelAnimationFrame(rafId);
-        window.removeEventListener("resize", resize);
-        canvas.remove();
-      }
-    }
-
-    requestAnimationFrame(draw);
-  }
-
-  // Affichage du total (évite le bug "30" si la liste change)
-  $("totalQ").textContent = QUESTIONS.length;
-  $("totalQTop").textContent = QUESTIONS.length;
-
-  function renderQuestion() {
-    const q = QUESTIONS[idx];
-    $("qIndex").textContent = idx + 1;
-    $("questionText").textContent = q.text;
-
-    const container = $("options");
-    container.innerHTML = "";
-    q.options.forEach((opt, i) => {
-      const label = document.createElement("label");
-      label.innerHTML = `<input type="radio" name="quizOpt" value="${i}"> ${opt}`;
-      container.appendChild(label);
-    });
-
-    $("nextBtn").disabled = true;
-    container.onchange = () => { $("nextBtn").disabled = false; };
-    resetTimer();
-  }
-
-  function resetTimer() {
-    clearInterval(timer);
-    timeLeft = TIME_LIMIT;
-    $("timeLeft").textContent = timeLeft;
-    $("progress").value = 0;
-
-    timer = setInterval(() => {
-      timeLeft--;
-      $("timeLeft").textContent = timeLeft;
-      $("progress").value = TIME_LIMIT - timeLeft;
-      if (timeLeft <= 0) { commitAnswer(true); nextQuestion(); }
-    }, 1000);
-  }
-
-  function commitAnswer(timedOut = false) {
-    const q = QUESTIONS[idx];
-    const radios = document.getElementsByName("quizOpt");
-    let selected = null;
-    for (const r of radios) { if (r.checked) selected = parseInt(r.value, 10); }
-
-    answers.push({
-      id: q.id,
-      selected,
-      isCorrect: selected === q.correctIndex,
-      timedOut
-    });
-  }
-
-  function nextQuestion() {
-    idx++;
-    if (idx >= QUESTIONS.length) {
-      clearInterval(timer);
-      $("quizCard").style.display = "none";
-      $("finalCard").style.display = "block";
-    } else {
-      renderQuestion();
-    }
-  }
-
-  $("serviceOrigin").onchange = () => {
-    $("otherServiceWrap").style.display = ($("serviceOrigin").value === "Autre") ? "block" : "none";
-  };
-
-  $("startBtn").onclick = () => {
-    const s = $("serviceOrigin").value;
-    const last = $("lastName").value.trim();
-    const first = $("firstName").value.trim();
-    const other = $("serviceOther").value.trim();
-
-    if (!s || !last || !first || (s === "Autre" && !other)) {
-      $("startWarn").style.display = "block";
-      return;
-    }
-    $("startWarn").style.display = "none";
-
-    resp.service = (s === "Autre") ? other : s;
-    resp.last = last;
-    resp.first = first;
-
-    $("startCard").style.display = "none";
-    $("quizCard").style.display = "block";
-    renderQuestion();
-  };
-
-  $("nextBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
-  $("skipBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
-
-  $("sendBtn").onclick = () => {
-    $("sendBtn").disabled = true;
-    $("sendStatus").textContent = "Envoi des résultats…";
-
-    const payload = {
-      submittedAtISO: new Date().toISOString(),
-      startedAtISO: "",
-      durationSeconds: "",
-      serviceOrigin: resp.service,
-      lastName: resp.last,
-      firstName: resp.first,
-      totalQuestions: QUESTIONS.length,
-      answeredCount: answers.filter(a => a.selected !== null && a.selected !== undefined).length,
-      correctCount: answers.filter(a => a.isCorrect).length,
-      freeText: $("freeText").value || "",
-      answers: answers
-    };
-
-    try {
-      fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(payload)
-      });
-    } catch (e) {}
-
-    $("finalCard").style.display = "none";
-    $("doneCard").style.display = "block";
-
-    // 🔥 Effet fin de quiz (fort)
-    launchFlames(2600, 2.0);
-  };
+  // CONFIGURATION
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0kqt1t0nhy3DVU6iJ4vQT4vDLfv_Gz7Jdoha3Ydx-FZdK8KAhdmQa73A3_VTMPt6xKA/exec";
+  const TIME_LIMIT = 15;
+
+  // QUESTIONS
+  const QUESTIONS = [
+    { id:"Q1", text:"Quels sont les trois éléments constituant le \"Triangle du feu\" indispensables au déclenchement d'une combustion ?", options:["Oxygène, Chaleur, Étincelle","Combustible, Comburant, Source d'inflammation","Bois, Essence, Électricité","Gaz, Flamme, Fumée"], correctIndex:1 },
+    { id:"Q2", text:"Quelle est la première cause de décès lors d'un incendie en milieu professionnel ?", options:["Les brûlures graves par contact direct avec les flammes","L'effondrement précoce des structures du bâtiment","L'inhalation des fumées et des gaz toxiques","Les traumatismes liés aux mouvements de panique"], correctIndex:2 },
+    { id:"Q3", text:"Quel gaz inodore et indécelable constitue le toxique majeur produit lors de toute combustion ?", options:["Le Dioxyde de carbone (CO2)","Le Monoxyde de carbone (CO)","Le Cyanure d'hydrogène (HCN)","Le Dioxyde d'azote (NO2)"], correctIndex:1 },
+    { id:"Q4", text:"Pour un feu de Classe A (bois, carton, papier), quel agent extincteur est préconisé par les consignes de sécurité ?", options:["Eau pulvérisée (avec ou sans additif)","Dioxyde de carbone (CO2) exclusivement","Poudre BC","Sable sec"], correctIndex:0 },
+    { id:"Q5", text:"Quel mode de propagation correspond au transfert de chaleur par mouvement d'air chaud et de fumées vers les parties hautes ?", options:["La conduction","Le rayonnement","La convection","Le déplacement de substances"], correctIndex:2 },
+    { id:"Q6", text:"Quelle est l'action prioritaire sur le terminal Siemens dès le déclenchement d'une alarme feu ?", options:["Appeler immédiatement les secours extérieurs","Appuyer sur la touche <Arrêt signal sonore>","Réarmer directement la centrale","Ouvrir le menu \"Topologie\""], correctIndex:1 },
+    { id:"Q7", text:"Sur le terminal, si après avoir appuyé sur \"Plus Options\" l'option << Afficher consigne >> n'apparaît pas, que faut-il faire ?", options:["Appuyer sur la touche \"R\" pour forcer l'affichage","Saisir immédiatement le code d'accès 2222","Appuyer sur la touche << C >> pour revenir à la localisation","Éteindre et rallumer le terminal"], correctIndex:2 },
+    { id:"Q8", text:"Quel est le risque majeur mentionné lors d'une mise \"Hors service\" (ZDA ou détecteur) ?", options:["Le déclenchement d'une alarme de dérangement permanente","L'impossibilité de réarmer le SMSI","Le feu peut s'étendre sans obstacle car les alarmes ne sont plus acquises","La perte définitive de la configuration logicielle"], correctIndex:2 },
+    { id:"Q9", text:"Dans le cas d'un \"Incident mineur\", quelle est la séquence exacte pour valider l'opération au terminal ?", options:["Appuyer sur \"Réarmement\" puis \"C\"","Appuyer sur \"OK\" puis saisir le code 2222","Entrer le mot de passe \"xxxx\" puis appuyer sur \"OK\"","Maintenir la touche \"Plus Options\" pendant 5 secondes"], correctIndex:2 },
+    { id:"Q10", text:"Quel risque spécifique présente une batterie au plomb (présente dans les ECS/SMSI) en cas d'incendie dans son local ?", options:["Aucun, le plomb est un métal incombustible","Émission d'hydrogène explosif et projection d'acide sulfurique corrosif","Transformation immédiate du plomb en gaz toxique asphyxiant","Risque d'implosion par vide d'air"], correctIndex:1 },
+    { id:"Q11", text:"Que signifie l'acronyme SDI dans le cadre du Système de Sécurité Incendie ?", options:["Système de Distribution d'Incendie","Système de Détection Incendie","Signal de Danger Imminent","Sécurité des Détecteurs Individuels"], correctIndex:1 },
+    { id:"Q12", text:"À la Gare de Bayonne, quel code est affiché sur le terminal pour accéder aux fonctions de niveau 2 (SDI) ?", options:["1234","2222","0000","ABCD"], correctIndex:1 },
+    { id:"Q13", text:"Dans quelle zone géographique de la gare se situe la ZDA 1 ?", options:["Le 1er étage (locaux téléphonie)","Le Rez-de-chaussée (espace de vente)","Le Sous-sol (local TGBT)","La Tour de l'horloge"], correctIndex:2 },
+    { id:"Q14", text:"Quelle est la manipulation correcte pour réarmer un Déclencheur Manuel (DM) après une alarme ?", options:["Saisir le code 2222 sur le boîtier rouge","Introduire la clé noire sous le boîtier et la pousser vers le haut","Remplacer la membrane déformable par une neuve","Appuyer 3 fois sur le bouton central"], correctIndex:1 },
+    { id:"Q15", text:"Quelle est la mission principale du SMSI (Système de Mise en Sécurité Incendie) ?", options:["Alerter les pompiers par transmetteur","Traiter et effectuer les mises en sécurité (compartimentage, désenfumage)","Éteindre automatiquement le début d'incendie","Identifier précisément le numéro du détecteur en alarme"], correctIndex:1 },
+    { id:"Q16", text:"Quelle précaution physique est impérative avant d'ouvrir la porte d'un local en alarme ?", options:["Frapper fort pour avertir d'éventuels occupants","Évaluer la température de la porte avec le dos de la main sans la toucher directement si elle semble brûlante","Regarder par le trou de la serrure pour voir les flammes","Ouvrir la porte d'un coup sec pour évacuer la fumée"], correctIndex:1 },
+    { id:"Q17", text:"À quel phénomène thermique mortel s'expose un agent qui ouvre une porte de local en feu sans précaution ?", options:["Une simple remontée de poussières","Une explosion de fumées (Backdraft) ou un embrasement généralisé éclair (Flashover)","Un gel immédiat dû à la chute de pression","Une décharge électrostatique de la structure"], correctIndex:1 },
+    { id:"Q18", text:"En quoi la responsabilité pénale de l'agent peut-elle être engagée lors de la levée de doute ?", options:["Uniquement en cas de vol de matériel durant l'intervention","Uniquement si l'agent est le chef d'établissement déclaré","Pour \"mise en danger délibérée d'autrui\" ou \"homicide involontaire\" en cas de non-respect des consignes de sécurité ayant entraîné des victimes","Sa responsabilité est nulle car il agit sous les ordres de sa hiérarchie"], correctIndex:2 },
+    { id:"Q19", text:"Pourquoi l'inhalation de fumée, même sur une courte durée, est-elle extrêmement dangereuse pour l'agent ?", options:["Elle provoque simplement une toux passagère irritante","L'opacité empêche toute orientation et les gaz (CO/HCN) provoquent une perte de connaissance en quelques inspirations","Elle rend les vêtements inflammables par dépôt de suie","Elle détruit instantanément l'émail des dents"], correctIndex:1 },
+    { id:"Q20", text:"Quelle est la conduite à tenir si la levée de doute confirme un feu non maîtrisable ?", options:["Essayer de vider tous les extincteurs de l'étage","Aviser immédiatement les secours (18 ou 112) et évacuer la gare","Attendre l'arrivée du chef de gare pour décider","Prendre des photos pour le rapport d'incident avant de partir"], correctIndex:1 },
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  let idx = 0, timer = null, timeLeft = TIME_LIMIT;
+  const answers = [];
+  const resp = { service:"", last:"", first:"" };
+
+  // === FLAMMES RÉALISTES (canvas) — ça pète ===
+  function launchFlames(durationMs = 2600, intensity = 2.0) {
+    const existing = document.getElementById("flameCanvas");
+    if (existing) existing.remove();
+
+    const canvas = document.createElement("canvas");
+    canvas.id = "flameCanvas";
+    canvas.style.position = "fixed";
+    canvas.style.inset = "0";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "9999";
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+    function resize() {
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    const particles = [];
+    const sparks = [];
+
+    const W = () => window.innerWidth;
+    const H = () => window.innerHeight;
+    const baseX = () => W() * 0.5;
+    const baseY = () => H() + 30;
+
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+    const flameRate = Math.floor(220 * intensity);
+    const sparkRate = Math.floor(90 * intensity);
+    const jetWidth  = 210 * Math.sqrt(intensity);
+    const jetHeight = 1.0 + 0.45 * intensity;
+    const shakeMax  = 4.5 * clamp(intensity, 1, 2.4);
+
+    let tNoise = 0;
+    function noise(x) {
+      return Math.sin(x) * 0.6 + Math.sin(x * 0.37 + 1.7) * 0.3 + Math.sin(x * 0.11 + 2.9) * 0.1;
+    }
+
+    function addFlameParticle(burst = false) {
+      particles.push({
+        x: baseX() + rand(-jetWidth, jetWidth) * (burst ? 1.35 : 1.0),
+        y: baseY(),
+        vx: rand(-1.7, 1.7) * (burst ? 1.7 : 1.0),
+        vy: -rand(3.6, 8.6) * jetHeight * (burst ? 1.25 : 1.0),
+        size: rand(12, 34) * (burst ? 1.2 : 1.0) * (0.95 + intensity * 0.25),
+        life: rand(650, 1150) / (0.85 + intensity * 0.12),
+        born: performance.now(),
+        heat: burst ? rand(0.7, 1.0) : rand(0.45, 0.95),
+        swirl: rand(0.7, 1.8) * (burst ? 1.25 : 1.0),
+        seed: Math.random() * 1000,
+      });
+    }
+
+    function addSpark(burst = false) {
+      sparks.push({
+        x: baseX() + rand(-jetWidth * 0.55, jetWidth * 0.55),
+        y: baseY() - rand(10, 110),
+        vx: rand(-3.0, 3.0) * (burst ? 2.0 : 1.0),
+        vy: -rand(6, 13) * (burst ? 1.45 : 1.0),
+        g: rand(0.08, 0.16),
+        size: rand(1.2, 3.2) * (burst ? 1.3 : 1.0),
+        life: rand(420, 980) / (0.9 + intensity * 0.2),
+        born: performance.now(),
+      });
+    }
+
+    function burst(power = 1.0) {
+      const nf = Math.floor(140 * intensity * power);
+      const ns = Math.floor(110 * intensity * power);
+      for (let i = 0; i < nf; i++) addFlameParticle(true);
+      for (let i = 0; i < ns; i++) addSpark(true);
+    }
+
+    burst(1.0);
+
+    const start = performance.now();
+    let last = start;
+    let rafId;
+
+    function draw(now) {
+      const elapsed = now - start;
+      const dt = Math.min(40, now - last);
+      last = now;
+
+      if (elapsed < durationMs) {
+        const f = Math.floor((flameRate * dt) / 1000);
+        const s = Math.floor((sparkRate * dt) / 1000);
+        for (let i = 0; i < f; i++) addFlameParticle(false);
+        for (let i = 0; i < s; i++) addSpark(false);
+
+        if (Math.random() < 0.16 * intensity) burst(0.35);
+      }
+
+      ctx.clearRect(0, 0, W(), H());
+
+      const shake = (elapsed < durationMs) ? (Math.random() * 2 - 1) * shakeMax * 0.28 : 0;
+      const shakeY = (elapsed < durationMs) ? (Math.random() * 2 - 1) * shakeMax * 0.18 : 0;
+
+      ctx.save();
+      ctx.translate(shake, shakeY);
+      ctx.globalCompositeOperation = "lighter";
+      ctx.filter = "blur(12px)";
+      ctx.globalAlpha = 0.22 * clamp(intensity, 1, 2.4);
+      const glow = ctx.createRadialGradient(baseX(), H(), 20, baseX(), H(), 320 * intensity);
+      glow.addColorStop(0.0, "rgba(255,190,60,0.95)");
+      glow.addColorStop(0.35, "rgba(255,90,0,0.55)");
+      glow.addColorStop(1.0, "rgba(255,30,0,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(baseX(), H(), 300 * intensity, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      tNoise += dt * 0.004;
+
+      ctx.save();
+      ctx.translate(shake, shakeY);
+      ctx.globalCompositeOperation = "lighter";
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        const age = now - p.born;
+        const t = age / p.life;
+
+        if (t >= 1 || p.y < -140) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        const n = noise(tNoise + p.seed + p.y * 0.01);
+        const sway = n * 2.0 * p.swirl * (1.2 - t);
+        p.vx += sway * 0.02;
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy *= 0.992;
+        p.vx *= 0.985;
+
+        const size = p.size * (1.08 - t * 0.58);
+        const alpha = clamp(1.0 - t, 0, 1);
+        const heat = clamp(p.heat + (0.18 - t * 0.42), 0, 1);
+
+        const r = 255;
+        const g = Math.floor(80 + 170 * heat);
+        const b = Math.floor(10 + 30 * heat);
+
+        ctx.save();
+        ctx.globalAlpha = alpha * (0.55 + intensity * 0.15);
+
+        ctx.filter = `blur(${10 + 12 * heat}px)`;
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, size);
+        grad.addColorStop(0.0, `rgba(${r},${g},${b},0.95)`);
+        grad.addColorStop(0.35, `rgba(255,120,0,0.65)`);
+        grad.addColorStop(1.0, `rgba(120,0,0,0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y, size * 0.6, size * 1.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.filter = `blur(${3 + 5 * heat}px)`;
+        ctx.fillStyle = `rgba(255,${Math.floor(70 + 170 * heat)},0,0.55)`;
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y + size * 0.12, size * 0.22, size * 0.6, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      ctx.filter = "none";
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        const age = now - s.born;
+        const t = age / s.life;
+
+        if (t >= 1 || s.y < -140) {
+          sparks.splice(i, 1);
+          continue;
+        }
+
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy += s.g;
+        s.vx *= 0.992;
+
+        const a = 1 - t;
+
+        ctx.save();
+        ctx.globalAlpha = a * 0.95;
+
+        ctx.strokeStyle = `rgba(255,220,120,${a})`;
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(s.x - s.vx * 2.0, s.y - s.vy * 2.0);
+        ctx.stroke();
+
+        ctx.fillStyle = `rgba(255,245,180,${a})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      ctx.restore();
+
+      if (elapsed < durationMs || particles.length > 0 || sparks.length > 0) {
+        rafId = requestAnimationFrame(draw);
+      } else {
+        cancelAnimationFrame(rafId);
+        window.removeEventListener("resize", resize);
+        canvas.remove();
+    }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  // Affichage du total (évite le bug "30" si la liste change)
+  $("totalQ").textContent = QUESTIONS.length;
+  $("totalQTop").textContent = QUESTIONS.length;
+
+  function renderQuestion() {
+    const q = QUESTIONS[idx];
+    $("qIndex").textContent = idx + 1;
+    $("questionText").textContent = q.text;
+
+    const container = $("options");
+    container.innerHTML = "";
+    q.options.forEach((opt, i) => {
+      const label = document.createElement("label");
+      label.innerHTML = `<input type="radio" name="quizOpt" value="${i}"> ${opt}`;
+      container.appendChild(label);
+    });
+
+    $("nextBtn").disabled = true;
+    container.onchange = () => { $("nextBtn").disabled = false; };
+    resetTimer();
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timeLeft = TIME_LIMIT;
+    $("timeLeft").textContent = timeLeft;
+    $("progress").value = 0;
+
+    timer = setInterval(() => {
+      timeLeft--;
+      $("timeLeft").textContent = timeLeft;
+      $("progress").value = TIME_LIMIT - timeLeft;
+      if (timeLeft <= 0) { commitAnswer(true); nextQuestion(); }
+    }, 1000);
+  }
+
+  function commitAnswer(timedOut = false) {
+    const q = QUESTIONS[idx];
+    const radios = document.getElementsByName("quizOpt");
+    let selected = null;
+    for (const r of radios) { if (r.checked) selected = parseInt(r.value, 10); }
+
+    answers.push({
+      id: q.id,
+      selected,
+      isCorrect: selected === q.correctIndex,
+      timedOut
+    });
+  }
+
+  function nextQuestion() {
+    idx++;
+    if (idx >= QUESTIONS.length) {
+      clearInterval(timer);
+      $("quizCard").style.display = "none";
+      $("finalCard").style.display = "block";
+    } else {
+      renderQuestion();
+    }
+  }
+
+  $("serviceOrigin").onchange = () => {
+    $("otherServiceWrap").style.display = ($("serviceOrigin").value === "Autre") ? "block" : "none";
+  };
+
+  $("startBtn").onclick = () => {
+    const s = $("serviceOrigin").value;
+    const last = $("lastName").value.trim();
+    const first = $("firstName").value.trim();
+    const other = $("serviceOther").value.trim();
+
+    if (!s || !last || !first || (s === "Autre" && !other)) {
+      $("startWarn").style.display = "block";
+      return;
+    }
+    $("startWarn").style.display = "none";
+
+    resp.service = (s === "Autre") ? other : s;
+    resp.last = last;
+    resp.first = first;
+
+    $("startCard").style.display = "none";
+    $("quizCard").style.display = "block";
+    renderQuestion();
+  };
+
+  $("nextBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
+  $("skipBtn").onclick = () => { commitAnswer(false); nextQuestion(); };
+
+  $("sendBtn").onclick = () => {
+    $("sendBtn").disabled = true;
+    $("sendStatus").textContent = "Envoi des résultats…";
+
+    const payload = {
+      submittedAtISO: new Date().toISOString(),
+      startedAtISO: "",
+      durationSeconds: "",
+      serviceOrigin: resp.service,
+      lastName: resp.last,
+      firstName: resp.first,
+      totalQuestions: QUESTIONS.length,
+      answeredCount: answers.filter(a => a.selected !== null && a.selected !== undefined).length,
+      correctCount: answers.filter(a => a.isCorrect).length,
+      freeText: $("freeText").value || "",
+      answers: answers
+    };
+
+    try {
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {}
+
+    $("finalCard").style.display = "none";
+    $("doneCard").style.display = "block";
+
+    // 🔥 Effet fin de quiz (fort)
+    launchFlames(2600, 2.0);
+  };
 </script>
 </body>
 </html>
